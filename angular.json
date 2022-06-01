@@ -3,8 +3,6 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
-    "api-interfaces": "libs/api-interfaces",
-    "planning-poker": "apps/planning-poker",
-    "planning-poker-e2e": "apps/planning-poker-e2e"
+    "planning-poker": "apps/planning-poker"
   }
 }
