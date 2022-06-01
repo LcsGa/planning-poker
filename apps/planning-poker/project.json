@@ -1,7 +1,7 @@
 {
   "projectType": "application",
   "sourceRoot": "apps/planning-poker/src",
-  "prefix": "planning-poker",
+  "prefix": "pp",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -17,7 +17,11 @@
           "apps/planning-poker/src/favicon.ico",
           "apps/planning-poker/src/assets"
         ],
-        "styles": ["apps/planning-poker/src/styles.scss"],
+        "styles": [
+          "apps/planning-poker/src/styles.scss",
+          "node_modules/primeng/resources/primeng.min.css",
+          "node_modules/primeng/resources/themes/lara-dark-teal/theme.css"
+        ],
         "scripts": []
       },
       "configurations": {

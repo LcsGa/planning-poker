@@ -21,7 +21,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "planning-poker",
+            "prefix": "pp",
             "style": "kebab-case"
           }
         ]
