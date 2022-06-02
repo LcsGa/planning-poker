@@ -1,6 +1,17 @@
 :host {
   display: flex;
   justify-content: space-between;
-  padding: var(--size-4) var(--size-6);
+  align-items: center;
+  padding: var(--size-2) var(--size-4);
   background: var(--surface-overlay);
+  border-bottom: 1px solid var(--surface-d);
+
+  ::ng-deep .p-sidebar-right {
+    width: auto !important;
+    min-width: 15rem;
+  }
+}
+
+h1 {
+  font-size: 1.5rem;
 }

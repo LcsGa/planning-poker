@@ -14,12 +14,13 @@
         "tsConfig": "apps/planning-poker/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
-          "apps/planning-poker/src/favicon.ico",
+          "apps/planning-poker/src/favicon.svg",
           "apps/planning-poker/src/assets"
         ],
         "styles": [
           "apps/planning-poker/src/styles.scss",
           "node_modules/primeng/resources/primeng.min.css",
+          "node_modules/primeicons/primeicons.css",
           "node_modules/primeng/resources/themes/lara-dark-teal/theme.css"
         ],
         "scripts": []

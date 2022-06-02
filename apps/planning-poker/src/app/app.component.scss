@@ -1,8 +1,11 @@
 :host {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  background: var(--surface-ground);
 }
 
 main {
   flex: 1;
+  position: relative;
 }

@@ -1,5 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   color: var(--text-color);
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
 
   --size-0: 0px;
   --size-px: 1px;
@@ -42,9 +48,4 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-}
-
-body {
-  min-height: 100vh;
-  background: var(--surface-ground);
 }

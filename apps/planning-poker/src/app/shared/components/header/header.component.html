@@ -1,3 +1,30 @@
-<h1>Planning Poker</h1>
+<div class="flex gap-2">
+  <img src="favicon.svg" alt="Icone PlanningPoker" />
 
-<p-toggleButton></p-toggleButton>
+  <h1 class="font-bold">PlanningPoker</h1>
+</div>
+
+<button
+  pButton
+  pRipple
+  class="p-button-secondary p-button-text p-button-rounded"
+  (click)="display = true"
+  [icon]="ICON.MENU"
+></button>
+<p-sidebar
+  class="absolute"
+  [(visible)]="display"
+  position="right"
+  [showCloseIcon]="true"
+>
+  <div class="flex items-center gap-4 mt-1">
+    <p-toggleButton
+      [onIcon]="ICON.SUN"
+      [offIcon]="ICON.MOON"
+      iconPos="single"
+      (click)="switchTheme()"
+    ></p-toggleButton>
+
+    <p>Thème {{ theme }}</p>
+  </div>
+</p-sidebar>
