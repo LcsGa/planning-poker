@@ -1,0 +1,20 @@
+<p-card header="Quel est votre pseudo ?">
+  <div class="p-inputgroup">
+    <span class="p-inputgroup-addon"><i [class]="ICON.USER"></i></span>
+
+    <input type="text" pInputText placeholder="Votre pseudo" />
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end">
+      <button
+        pButton
+        pRipple
+        class="p-button-sm"
+        label="Continuer"
+        [icon]="ICON.ARROW_RIGHT"
+        iconPos="right"
+      ></button>
+    </div>
+  </ng-template>
+</p-card>
