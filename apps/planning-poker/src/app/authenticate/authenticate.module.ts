@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { AuthenticateComponent } from './authenticate.component';
@@ -14,8 +14,8 @@ import { AuthenticateComponent } from './authenticate.component';
     ButtonModule,
     CardModule,
     CommonModule,
-    FormsModule,
     InputTextModule,
+    ReactiveFormsModule,
     RouterModule.forChild([{ path: '', component: AuthenticateComponent }]),
   ],
 })

@@ -1,13 +1,19 @@
 <p-card header="Quel est votre pseudo ?">
-  <div class="p-inputgroup">
-    <span class="p-inputgroup-addon"><i [class]="ICON.USER"></i></span>
+  <div class="flex flex-col">
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon"><i [class]="ICON.USER"></i></span>
 
-    <input
-      type="text"
-      pInputText
-      placeholder="Votre pseudo"
-      [(ngModel)]="pseudo"
-    />
+      <input
+        type="text"
+        pInputText
+        placeholder="Votre pseudo"
+        [formControl]="pseudoCtrl"
+      />
+    </div>
+
+    <small *ngIf="pseudoCtrl.dirty && pseudoCtrl.invalid" class="p-error">
+      Veuillez saisir un pseudo
+    </small>
   </div>
 
   <ng-template pTemplate="footer">
@@ -19,8 +25,8 @@
         label="Continuer"
         [icon]="ICON.ARROW_RIGHT"
         iconPos="right"
-        [disabled]="!pseudo"
-        (click)="validatePseudo()"
+        [disabled]="pseudoCtrl.invalid"
+        (click)="confirmPseudo()"
       ></button>
     </div>
   </ng-template>
