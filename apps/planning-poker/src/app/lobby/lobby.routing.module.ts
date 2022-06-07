@@ -14,6 +14,20 @@ import { RouterModule } from '@angular/router';
                 (m) => m.LobbyInitModule
               ),
           },
+          {
+            path: 'create',
+            loadChildren: () =>
+              import('./lobby-create/lobby-create.module').then(
+                (m) => m.LobbyCreateModule
+              ),
+          },
+          {
+            path: 'join',
+            loadChildren: () =>
+              import('./lobby-join/lobby-join.module').then(
+                (m) => m.LobbyJoinModule
+              ),
+          },
         ],
       },
     ]),

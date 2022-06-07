@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './header.component';
 import { RippleModule } from 'primeng/ripple';
+import { RouterModule } from '@angular/router';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+
+import { HeaderComponent } from './header.component';
 
 @NgModule({
   declarations: [HeaderComponent],
@@ -12,6 +14,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     CommonModule,
     ButtonModule,
     RippleModule,
+    RouterModule,
     SidebarModule,
     ToggleButtonModule,
   ],
