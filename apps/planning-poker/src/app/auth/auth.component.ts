@@ -38,6 +38,7 @@ export class AuthComponent implements OnInit {
     if (this.pseudoCtrl.valid) {
       this.userService.createUser(this.pseudoCtrl.value);
     } else {
+      this.userService.resetUser();
       this.pseudoCtrl.updateValueAndValidity();
       this.pseudoCtrl.markAsDirty();
     }

@@ -18,6 +18,11 @@ export class UserService {
     localStorage.setItem(this.USER, JSON.stringify(this.user$$.value));
   }
 
+  public resetUser(): void {
+    this.user$$.next(null);
+    localStorage.removeItem(this.USER);
+  }
+
   public fetchStoredUser(): void {
     const storedUser = localStorage.getItem(this.USER);
     this.user$$.next(storedUser ? JSON.parse(storedUser) : null);
