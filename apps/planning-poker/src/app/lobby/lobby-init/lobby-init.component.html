@@ -1,1 +1,21 @@
-<p>lobby-init works!</p>
+<p-card [header]="(initHeader$ | async)!">
+  <div class="flex justify-center">
+    <div class="flex flex-col gap-8 w-auto">
+      <button
+        pButton
+        pRipple
+        [icon]="ICON.CREATE"
+        iconPos="right"
+        label="Créer un salon"
+      ></button>
+
+      <button
+        pButton
+        pRipple
+        [icon]="ICON.JOIN"
+        iconPos="right"
+        label="Rejoindre un salon"
+      ></button>
+    </div>
+  </div>
+</p-card>
