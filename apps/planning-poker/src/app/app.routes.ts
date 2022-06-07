@@ -1,12 +1,14 @@
 import { Route } from '@angular/router';
 
 export const routes: Route[] = [
-  { path: '', redirectTo: 'authenticate', pathMatch: 'full' },
+  { path: '', redirectTo: 'auth', pathMatch: 'full' },
   {
-    path: 'authenticate',
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'lobby',
     loadChildren: () =>
-      import('./authenticate/authenticate.module').then(
-        (m) => m.AuthenticateModule
-      ),
+      import('./lobby/lobby.routing.module').then((m) => m.LobbyRoutingModule),
   },
 ];

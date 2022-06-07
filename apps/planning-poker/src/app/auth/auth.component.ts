@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { take, tap } from 'rxjs/operators';
 import { UserService } from '../shared/services/user.service';
 import { Icon } from '../shared/utils/icon.utils';
 
 @Component({
-  selector: 'pp-authenticate',
-  templateUrl: './authenticate.component.html',
-  styleUrls: ['./authenticate.component.scss'],
+  selector: 'pp-auth',
+  templateUrl: './auth.component.html',
 })
-export class AuthenticateComponent implements OnInit {
+export class AuthComponent implements OnInit {
   public pseudoCtrl!: FormControl;
 
   public readonly ICON = {
@@ -17,17 +17,19 @@ export class AuthenticateComponent implements OnInit {
     USER: Icon.of('user-astronaut'),
   };
 
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly router: Router
+  ) {
+    this.pseudoCtrl = new FormControl('', Validators.required);
+  }
 
   ngOnInit(): void {
     this.userService.fetchStoredUser();
     this.userService.user$
       .pipe(
         take(1),
-        tap(
-          (user) =>
-            (this.pseudoCtrl = new FormControl(user?.name, Validators.required))
-        )
+        tap((user) => this.pseudoCtrl.setValue(user?.name ?? ''))
       )
       .subscribe();
   }
@@ -35,6 +37,10 @@ export class AuthenticateComponent implements OnInit {
   public confirmPseudo(): void {
     if (this.pseudoCtrl.valid) {
       this.userService.createUser(this.pseudoCtrl.value);
+    } else {
+      this.pseudoCtrl.updateValueAndValidity();
+      this.pseudoCtrl.markAsDirty();
     }
+    this.router.navigateByUrl('/lobby/init');
   }
 }

@@ -6,17 +6,17 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { AuthenticateComponent } from './authenticate.component';
+import { AuthComponent } from './auth.component';
 
 @NgModule({
-  declarations: [AuthenticateComponent],
+  declarations: [AuthComponent],
   imports: [
     ButtonModule,
     CardModule,
     CommonModule,
     InputTextModule,
     ReactiveFormsModule,
-    RouterModule.forChild([{ path: '', component: AuthenticateComponent }]),
+    RouterModule.forChild([{ path: '', component: AuthComponent }]),
   ],
 })
-export class AuthenticateModule {}
+export class AuthModule {}
