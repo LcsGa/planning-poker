@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { generate as shortUuid } from 'short-uuid';
@@ -10,11 +10,11 @@ import { Icon } from '../../shared/utils/icon.utils';
   templateUrl: './lobby-create.component.html',
   styleUrls: ['./lobby-create.component.scss'],
 })
-export class LobbyCreateComponent {
+export class LobbyCreateComponent implements AfterViewInit {
   public lobbyId = shortUuid().slice(0, 10);
 
   public readonly ICON = {
-    COPY: Icon.of('clone'),
+    COPY: Icon.of('copy'),
     START: Icon.of('flag-checkered'),
   };
 
@@ -23,6 +23,10 @@ export class LobbyCreateComponent {
     private readonly userService: UserService,
     private readonly router: Router
   ) {}
+
+  ngAfterViewInit(): void {
+    this.copyLobbyId();
+  }
 
   public copyLobbyId(): void {
     navigator.clipboard.writeText(this.lobbyId).then(() =>

@@ -5,5 +5,7 @@ import { UserService } from './user.service';
   providedIn: 'root',
 })
 export class LobbyService {
+  public readonly ID_PATTERN = /^[\w\d]{10}$/;
+
   constructor(private readonly userService: UserService) {}
 }
