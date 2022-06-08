@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { Icon } from '../../shared/utils/icon.utils';
-import { generate as shortUuid } from 'short-uuid';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { generate as shortUuid } from 'short-uuid';
+import { UserService } from '../../shared/services/user.service';
+import { Icon } from '../../shared/utils/icon.utils';
 
 @Component({
   selector: 'pp-lobby-create',
@@ -16,7 +18,11 @@ export class LobbyCreateComponent {
     START: Icon.of('flag-checkered'),
   };
 
-  constructor(private readonly messageService: MessageService) {}
+  constructor(
+    private readonly messageService: MessageService,
+    private readonly userService: UserService,
+    private readonly router: Router
+  ) {}
 
   public copyLobbyId(): void {
     navigator.clipboard.writeText(this.lobbyId).then(() =>
@@ -27,5 +33,10 @@ export class LobbyCreateComponent {
         life: 1_000,
       })
     );
+  }
+
+  public startLobby(): void {
+    this.userService.addLobby(this.lobbyId);
+    this.router.navigateByUrl(`/lobby/${this.lobbyId}`);
   }
 }

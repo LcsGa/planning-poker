@@ -25,7 +25,7 @@ export class AuthComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.fetchStoredUser();
+    this.userService.fetchStored();
     this.userService.user$
       .pipe(
         take(1),
@@ -36,9 +36,9 @@ export class AuthComponent implements OnInit {
 
   public confirmPseudo(): void {
     if (this.pseudoCtrl.valid) {
-      this.userService.createUser(this.pseudoCtrl.value);
+      this.userService.create(this.pseudoCtrl.value);
     } else {
-      this.userService.resetUser();
+      this.userService.reset();
       this.pseudoCtrl.updateValueAndValidity();
       this.pseudoCtrl.markAsDirty();
     }

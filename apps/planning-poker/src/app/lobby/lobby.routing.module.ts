@@ -28,6 +28,13 @@ import { RouterModule } from '@angular/router';
                 (m) => m.LobbyJoinModule
               ),
           },
+          {
+            path: ':id',
+            loadChildren: () =>
+              import('./lobby-room/lobby-room.module').then(
+                (m) => m.LobbyRoomModule
+              ),
+          },
         ],
       },
     ]),
