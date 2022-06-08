@@ -1,1 +1,22 @@
-<p>lobby-create works!</p>
+<p-toast position="top-right"></p-toast>
+
+<p-card header="Bravo ! Ton salon a été créé !">
+  <div class="p-inputgroup">
+    <input type="text" pInputText [value]="lobbyId" disabled />
+
+    <button pButton pRipple [icon]="ICON.COPY" (click)="copyLobbyId()"></button>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end">
+      <button
+        pButton
+        pRipple
+        class="p-button-sm"
+        label="Commencer"
+        [icon]="ICON.START"
+        iconPos="right"
+      ></button>
+    </div>
+  </ng-template>
+</p-card>

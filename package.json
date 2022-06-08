@@ -27,6 +27,7 @@
     "primeng": "^13.4.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~7.4.0",
+    "short-uuid": "^4.2.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
   },

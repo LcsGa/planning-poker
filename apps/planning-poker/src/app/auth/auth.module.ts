@@ -4,6 +4,7 @@ import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RippleModule } from 'primeng/ripple';
 import { RouterModule } from '@angular/router';
 
 import { AuthComponent } from './auth.component';
@@ -16,6 +17,7 @@ import { AuthComponent } from './auth.component';
     CommonModule,
     InputTextModule,
     ReactiveFormsModule,
+    RippleModule,
     RouterModule.forChild([{ path: '', component: AuthComponent }]),
   ],
 })

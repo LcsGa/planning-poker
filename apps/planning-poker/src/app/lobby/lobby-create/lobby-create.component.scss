@@ -1,0 +1,21 @@
+:host ::ng-deep {
+  .p-toast {
+    width: auto;
+
+    &-message {
+      &-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      &-text {
+        margin: 0 1rem 0 0 !important;
+      }
+    }
+
+    &-detail:empty {
+      display: none;
+    }
+  }
+}
