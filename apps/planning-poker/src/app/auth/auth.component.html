@@ -6,13 +6,13 @@
       <input
         type="text"
         pInputText
-        placeholder="Votre pseudo"
+        placeholder="Pseudo"
         [formControl]="pseudoCtrl"
       />
     </div>
 
-    <small *ngIf="pseudoCtrl.dirty && pseudoCtrl.invalid" class="p-error">
-      Comment savoir qui tu es ?!
+    <small *ngIf="pseudoCtrl.touched && pseudoCtrl.invalid" class="p-error">
+      Comment savoir qui tu es ?
     </small>
   </div>
 

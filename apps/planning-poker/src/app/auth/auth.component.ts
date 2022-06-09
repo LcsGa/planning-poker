@@ -40,7 +40,7 @@ export class AuthComponent implements OnInit {
     } else {
       this.userService.reset();
       this.pseudoCtrl.updateValueAndValidity();
-      this.pseudoCtrl.markAsDirty();
+      this.pseudoCtrl.markAsTouched();
     }
     this.router.navigateByUrl('/lobby/init');
   }

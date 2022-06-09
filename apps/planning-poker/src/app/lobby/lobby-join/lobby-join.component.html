@@ -1,6 +1,12 @@
 <p-card header="Tout le monde t'attend !">
   <div class="p-inputgroup">
-    <input type="text" pInputText [formControl]="lobbyIdCtrl" />
+    <input
+      id="lobbyId"
+      type="text"
+      pInputText
+      [formControl]="lobbyIdCtrl"
+      placeholder="ID du salon"
+    />
 
     <button
       pButton
@@ -9,6 +15,17 @@
       (click)="pasteLobbyId()"
     ></button>
   </div>
+
+  <small *ngIf="lobbyIdCtrl.invalid && lobbyIdCtrl.touched" class="p-error">
+    <span *ngIf="lobbyIdCtrl.hasError('required')">
+      Il te faut un salon pour rejoindre un salon
+      <i [class]="ICON.FACE_SWEAT"></i>
+    </span>
+
+    <span *ngIf="lobbyIdCtrl.hasError('pattern')">
+      L'id du salon est incorrect !
+    </span>
+  </small>
 
   <ng-template pTemplate="footer">
     <div class="flex justify-end">
@@ -19,6 +36,7 @@
         label="Rejoindre"
         [icon]="ICON.JOIN"
         iconPos="right"
+        (click)="joinLobby()"
       ></button>
     </div>
   </ng-template>
