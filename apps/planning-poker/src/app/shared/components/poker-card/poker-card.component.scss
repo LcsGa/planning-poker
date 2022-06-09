@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  justify-content: center;
+}
+
+.poker-card {
+  width: 100%;
+  aspect-ratio: 6/9;
+  border: 3px solid var(--primary-color);
+  border-radius: 8px;
+  color: var(--primary-color);
+}
