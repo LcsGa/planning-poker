@@ -1,6 +1,8 @@
-<div class="poker-card flex justify-center items-center">
-  <img
-    [src]="points | imagePath: 'assets/cards/points':'svg'"
-    [alt]="points ?? 'unknown image' | titlecase"
-  />
+<div
+  *ngIf="points | imagePath: 'assets/cards/points':'svg' | svgMask as mask"
+  class="poker-card flex justify-center items-center cursor-pointer"
+  [class.poker-card--selected]="isSelected"
+  [tabindex]="0"
+>
+  <img [style.mask]="mask" [style.-webkit-mask]="mask" />
 </div>

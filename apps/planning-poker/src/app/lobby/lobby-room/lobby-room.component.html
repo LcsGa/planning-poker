@@ -2,7 +2,10 @@
   class="grid grid-cols-fit-4 sm:grid-cols-fit-5 md:grid-cols-fit-6 auto-rows-fr gap-6 sm:gap-8 md:gap-10"
 >
   <pp-poker-card
-    *ngFor="let cardPoints of cardsPoints"
-    [points]="cardPoints"
+    *ngFor="let card of cards"
+    [points]="card.points"
+    [isSelected]="card.isSelected"
+    (click)="selectCard(card.points)"
+    (keydown.enter)="selectCard(card.points)"
   ></pp-poker-card>
 </div>

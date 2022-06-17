@@ -9,4 +9,36 @@
   border: 3px solid var(--primary-color);
   border-radius: 8px;
   color: var(--primary-color);
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  user-select: none;
+
+  &:hover,
+  &:focus-visible {
+    transform: scale(1.1);
+  }
+
+  &--selected {
+    position: relative;
+    background: var(--primary-color);
+
+    &::after {
+      content: '';
+      position: absolute;
+      display: block;
+      border: 3px solid var(--surface-ground);
+      border-radius: 4px;
+      inset: 0;
+    }
+
+    img {
+      background: var(--surface-ground) !important;
+    }
+  }
+
+  img {
+    background: var(--primary-color);
+    width: 100%;
+    height: 20%;
+  }
 }

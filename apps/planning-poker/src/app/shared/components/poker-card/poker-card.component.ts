@@ -8,4 +8,7 @@ import { Component, Input } from '@angular/core';
 export class PokerCardComponent {
   @Input()
   public points?: string;
+
+  @Input()
+  public isSelected = false;
 }
