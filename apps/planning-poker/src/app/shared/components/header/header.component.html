@@ -8,13 +8,9 @@
   pButton
   pRipple
   class="p-button-secondary p-button-text p-button-rounded"
-  (click)="display = true"
+  (click)="displayMenu = true"
   [icon]="ICON.MENU"
 ></button>
-<p-sidebar class="absolute" [(visible)]="display" position="right" [showCloseIcon]="true">
-  <div class="flex items-center gap-4 mt-1">
-    <p-toggleButton [onIcon]="ICON.MOON" [offIcon]="ICON.SUN" iconPos="single" (click)="switchTheme()"></p-toggleButton>
-
-    <p>Thème {{ theme }}</p>
-  </div>
+<p-sidebar class="absolute" [(visible)]="displayMenu" position="right" [showCloseIcon]="true">
+  <pp-menu></pp-menu>
 </p-sidebar>

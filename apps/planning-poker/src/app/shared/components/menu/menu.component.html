@@ -1,0 +1,5 @@
+<div class="flex items-center gap-4 mt-1">
+  <p-toggleButton [onIcon]="ICON.MOON" [offIcon]="ICON.SUN" iconPos="single" (click)="switchTheme()"></p-toggleButton>
+
+  <p>Thème {{ theme ?? "clair" }}</p>
+</div>
