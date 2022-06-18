@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { CommonModule } from '@angular/common';
-import { InputTextModule } from 'primeng/inputtext';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RippleModule } from 'primeng/ripple';
-import { RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
+import { CommonModule } from "@angular/common";
+import { InputTextModule } from "primeng/inputtext";
+import { ReactiveFormsModule } from "@angular/forms";
+import { RippleModule } from "primeng/ripple";
+import { RouterModule } from "@angular/router";
 
-import { LobbyJoinComponent } from './lobby-join.component';
+import { LobbyJoinComponent } from "./lobby-join.component";
 
-import { IsAuthenticatedGuard } from '../../shared/guards/is-authenticated.guard';
+import { IsAuthenticatedGuard } from "../../shared/guards/is-authenticated.guard";
 
 @NgModule({
   declarations: [LobbyJoinComponent],
@@ -22,7 +22,7 @@ import { IsAuthenticatedGuard } from '../../shared/guards/is-authenticated.guard
     RippleModule,
     RouterModule.forChild([
       {
-        path: '',
+        path: "",
         component: LobbyJoinComponent,
         canActivate: [IsAuthenticatedGuard],
       },

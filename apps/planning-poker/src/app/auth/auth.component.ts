@@ -1,27 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { take, tap } from 'rxjs/operators';
-import { UserService } from '../shared/services/user.service';
-import { Icon } from '../shared/utils/icon.utils';
+import { Component, OnInit } from "@angular/core";
+import { FormControl, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { take, tap } from "rxjs/operators";
+import { UserService } from "../shared/services/user.service";
+import { Icon } from "../shared/utils/icon.utils";
 
 @Component({
-  selector: 'pp-auth',
-  templateUrl: './auth.component.html',
+  selector: "pp-auth",
+  templateUrl: "./auth.component.html",
 })
 export class AuthComponent implements OnInit {
   public pseudoCtrl!: FormControl;
 
   public readonly ICON = {
-    ARROW_RIGHT: Icon.of('chevron-right'),
-    USER: Icon.of('user-astronaut'),
+    ARROW_RIGHT: Icon.of("chevron-right"),
+    USER: Icon.of("user-astronaut"),
   };
 
-  constructor(
-    private readonly userService: UserService,
-    private readonly router: Router
-  ) {
-    this.pseudoCtrl = new FormControl('', Validators.required);
+  constructor(private readonly userService: UserService, private readonly router: Router) {
+    this.pseudoCtrl = new FormControl("", Validators.required);
   }
 
   ngOnInit(): void {
@@ -29,7 +26,7 @@ export class AuthComponent implements OnInit {
     this.userService.user$
       .pipe(
         take(1),
-        tap((user) => this.pseudoCtrl.setValue(user?.name ?? ''))
+        tap((user) => this.pseudoCtrl.setValue(user?.name ?? ""))
       )
       .subscribe();
   }
@@ -42,6 +39,6 @@ export class AuthComponent implements OnInit {
       this.pseudoCtrl.updateValueAndValidity();
       this.pseudoCtrl.markAsTouched();
     }
-    this.router.navigateByUrl('/lobby/init');
+    this.router.navigateByUrl("/lobby/init");
   }
 }

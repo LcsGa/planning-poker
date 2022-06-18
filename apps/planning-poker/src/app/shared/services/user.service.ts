@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { filter, take, tap } from 'rxjs/operators';
-import { io, Socket } from 'socket.io-client';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
+import { filter, take, tap } from "rxjs/operators";
+import { io, Socket } from "socket.io-client";
 
 export interface User {
   id?: string;
@@ -9,9 +9,9 @@ export interface User {
   lobbyId?: string;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class UserService {
-  private USER = 'user';
+  private USER = "user";
 
   private readonly user$$ = new BehaviorSubject<User | null>(null);
   public readonly user$ = this.user$$.asObservable();
@@ -42,10 +42,7 @@ export class UserService {
       .pipe(
         take(1),
         filter((user) => !!user),
-        tap(
-          (user) =>
-            (this.userSocket = io('http://localhost:3000', { auth: user! }))
-        )
+        tap((user) => (this.userSocket = io("http://localhost:3000", { auth: user! })))
       )
       .subscribe();
   }

@@ -10,7 +10,7 @@
   border-radius: 8px;
   color: var(--primary-color);
   outline: none;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.15s ease-in-out;
   user-select: none;
 
   &:hover,
@@ -23,7 +23,7 @@
     background: var(--primary-color);
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       display: block;
       border: 3px solid var(--surface-ground);

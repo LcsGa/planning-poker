@@ -12,6 +12,15 @@
   }
 }
 
-h1 {
-  font-size: 1.5rem;
+.header {
+  &__logo {
+    width: 28px;
+    height: 100%;
+    background: var(--primary-color);
+    mask: url(/favicon.svg) no-repeat center / contain;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+  }
 }

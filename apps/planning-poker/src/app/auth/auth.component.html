@@ -3,17 +3,10 @@
     <div class="p-inputgroup">
       <span class="p-inputgroup-addon"><i [class]="ICON.USER"></i></span>
 
-      <input
-        type="text"
-        pInputText
-        placeholder="Pseudo"
-        [formControl]="pseudoCtrl"
-      />
+      <input type="text" pInputText placeholder="Pseudo" [formControl]="pseudoCtrl" />
     </div>
 
-    <small *ngIf="pseudoCtrl.touched && pseudoCtrl.invalid" class="p-error">
-      Comment savoir qui tu es ?
-    </small>
+    <small *ngIf="pseudoCtrl.touched && pseudoCtrl.invalid" class="p-error"> Comment savoir qui tu es ? </small>
   </div>
 
   <ng-template pTemplate="footer">

@@ -1,19 +1,8 @@
 <p-card header="Tout le monde t'attend !">
   <div class="p-inputgroup">
-    <input
-      id="lobbyId"
-      type="text"
-      pInputText
-      [formControl]="lobbyIdCtrl"
-      placeholder="ID du salon"
-    />
+    <input id="lobbyId" type="text" pInputText [formControl]="lobbyIdCtrl" placeholder="ID du salon" />
 
-    <button
-      pButton
-      pRipple
-      [icon]="ICON.PASTE"
-      (click)="pasteLobbyId()"
-    ></button>
+    <button pButton pRipple [icon]="ICON.PASTE" (click)="pasteLobbyId()"></button>
   </div>
 
   <small *ngIf="lobbyIdCtrl.invalid && lobbyIdCtrl.touched" class="p-error">
@@ -22,9 +11,7 @@
       <i [class]="ICON.FACE_SWEAT"></i>
     </span>
 
-    <span *ngIf="lobbyIdCtrl.hasError('pattern')">
-      L'id du salon est incorrect !
-    </span>
+    <span *ngIf="lobbyIdCtrl.hasError('pattern')"> L'id du salon est incorrect ! </span>
   </small>
 
   <ng-template pTemplate="footer">

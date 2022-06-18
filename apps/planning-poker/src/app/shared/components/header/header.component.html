@@ -1,7 +1,7 @@
 <div class="flex gap-2 cursor-pointer" routerLink="/auth">
-  <img src="favicon.svg" alt="Icone PlanningPoker" />
+  <img class="header__logo" src="favicon.svg" alt="Icone PlanningPoker" />
 
-  <h1 class="font-bold">PlanningPoker</h1>
+  <h1 class="header__title font-bold">PlanningPoker</h1>
 </div>
 
 <button
@@ -11,19 +11,9 @@
   (click)="display = true"
   [icon]="ICON.MENU"
 ></button>
-<p-sidebar
-  class="absolute"
-  [(visible)]="display"
-  position="right"
-  [showCloseIcon]="true"
->
+<p-sidebar class="absolute" [(visible)]="display" position="right" [showCloseIcon]="true">
   <div class="flex items-center gap-4 mt-1">
-    <p-toggleButton
-      [onIcon]="ICON.SUN"
-      [offIcon]="ICON.MOON"
-      iconPos="single"
-      (click)="switchTheme()"
-    ></p-toggleButton>
+    <p-toggleButton [onIcon]="ICON.MOON" [offIcon]="ICON.SUN" iconPos="single" (click)="switchTheme()"></p-toggleButton>
 
     <p>Thème {{ theme }}</p>
   </div>

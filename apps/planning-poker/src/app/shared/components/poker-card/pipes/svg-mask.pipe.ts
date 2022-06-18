@@ -1,7 +1,7 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-  name: 'svgMask',
+  name: "svgMask",
 })
 export class SvgMaskPipe implements PipeTransform {
   transform(svgPath: string): string {
