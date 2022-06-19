@@ -6,9 +6,15 @@
   background: var(--surface-overlay);
   border-bottom: 1px solid var(--surface-d);
 
-  ::ng-deep .p-sidebar-right {
-    width: auto !important;
-    min-width: 15rem;
+  ::ng-deep .p-sidebar {
+    &-right {
+      width: auto !important;
+      min-width: 15rem;
+    }
+
+    &-content {
+      height: 100%;
+    }
   }
 }
 

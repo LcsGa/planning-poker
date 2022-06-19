@@ -2,10 +2,12 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { filter, take, tap } from "rxjs/operators";
 import { io, Socket } from "socket.io-client";
+import { Color, ColorTriplet } from "../utils/color.utils";
 
 export interface User {
   id?: string;
   name: string;
+  color: ColorTriplet;
   lobbyId?: string;
 }
 
@@ -19,7 +21,7 @@ export class UserService {
   private userSocket?: Socket;
 
   public create(name: string): void {
-    this.user$$.next({ name });
+    this.user$$.next({ name, color: Color.random });
     localStorage.setItem(this.USER, JSON.stringify(this.user$$.value));
   }
 

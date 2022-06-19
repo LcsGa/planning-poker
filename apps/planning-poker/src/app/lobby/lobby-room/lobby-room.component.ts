@@ -1,5 +1,4 @@
 import { Component } from "@angular/core";
-import { Icon } from "../../shared/utils/icon.utils";
 
 @Component({
   selector: "pp-lobby-room",
