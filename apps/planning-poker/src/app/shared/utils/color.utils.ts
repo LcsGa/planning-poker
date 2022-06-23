@@ -1,4 +1,4 @@
-export type ColorTriplet = { r: number; g: number; b: number };
+import { ColorTriplet } from "@planning-poker/shared";
 
 export class Color {
   private static get randomRgbInt(): number {

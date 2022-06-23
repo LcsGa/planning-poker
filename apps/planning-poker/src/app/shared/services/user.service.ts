@@ -1,51 +1,31 @@
 import { Injectable } from "@angular/core";
+import { User } from "@planning-poker/shared";
 import { BehaviorSubject } from "rxjs";
-import { filter, take, tap } from "rxjs/operators";
-import { io, Socket } from "socket.io-client";
-import { Color, ColorTriplet } from "../utils/color.utils";
-
-export interface User {
-  id?: string;
-  name: string;
-  color: ColorTriplet;
-  lobbyId?: string;
-}
+import { Color } from "../utils/color.utils";
 
 @Injectable({ providedIn: "root" })
 export class UserService {
-  private USER = "user";
+  private readonly KEY = "user";
 
   private readonly user$$ = new BehaviorSubject<User | null>(null);
   public readonly user$ = this.user$$.asObservable();
 
-  private userSocket?: Socket;
-
   public create(name: string): void {
     this.user$$.next({ name, color: Color.random });
-    localStorage.setItem(this.USER, JSON.stringify(this.user$$.value));
+    localStorage.setItem(this.KEY, JSON.stringify(this.user$$.value));
   }
 
   public reset(): void {
     this.user$$.next(null);
-    localStorage.removeItem(this.USER);
+    localStorage.removeItem(this.KEY);
   }
 
-  public fetchStored(): void {
-    const storedUser = localStorage.getItem(this.USER);
+  public initStored(): void {
+    const storedUser = localStorage.getItem(this.KEY);
     this.user$$.next(storedUser ? JSON.parse(storedUser) : null);
   }
 
-  public addLobby(lobbyId: string): void {
-    this.user$$.next({ ...this.user$$.value!, lobbyId });
-  }
-
-  public connect(): void {
-    this.user$
-      .pipe(
-        take(1),
-        filter((user) => !!user),
-        tap((user) => (this.userSocket = io("http://localhost:3000", { auth: user! })))
-      )
-      .subscribe();
+  public joinLobby(lobbyId: string, { isHost } = { isHost: false }): void {
+    this.user$$.next({ ...this.user$$.value!, lobbyId, isHost });
   }
 }

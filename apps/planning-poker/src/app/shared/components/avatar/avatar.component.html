@@ -6,6 +6,6 @@
   <div class="absolute instet-0 flex items-center gap-2 max-w-full">
     <p class="truncate">{{ user.name }}</p>
 
-    <i *ngIf="isHost" [class]="ICON.CROWN"></i>
+    <i *ngIf="user.isHost" [class]="ICON.CROWN"></i>
   </div>
 </div>

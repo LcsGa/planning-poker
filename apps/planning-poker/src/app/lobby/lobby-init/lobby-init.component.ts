@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
+import { User } from "@planning-poker/shared";
 import { map } from "rxjs/operators";
-import { User, UserService } from "../../shared/services/user.service";
+import { UserService } from "../../shared/services/user.service";
 import { Icon } from "../../shared/utils/icon.utils";
 
 @Component({

@@ -1,12 +1,14 @@
-<p-divider align="center" styleClass="divider divider--first">{{ "Participants" | uppercase }}</p-divider>
+<ng-container *ngIf="users$ | async as users">
+  <ng-container *ngIf="users.length">
+    <p-divider align="center" styleClass="divider divider--first">{{ "Participants" | uppercase }}</p-divider>
 
-<div class="relative flex-1">
-  <div class="absolute inset-0 flex flex-col gap-3 overflow-y-auto">
-    <pp-avatar [user]="{ name: 'Lucas', color: { r: 255, g: 46, b: 123 } }"></pp-avatar>
-
-    <pp-avatar [user]="{ name: 'Bruno Andriamiarina', color: { r: 25, g: 146, b: 23 } }"></pp-avatar>
-  </div>
-</div>
+    <div class="relative flex-1">
+      <div class="absolute inset-0 flex flex-col gap-3 overflow-y-auto">
+        <pp-avatar *ngFor="let user of users" [user]="user"></pp-avatar>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
 
 <p-divider align="center" styleClass="divider">{{ "Paramètres" | uppercase }}</p-divider>
 

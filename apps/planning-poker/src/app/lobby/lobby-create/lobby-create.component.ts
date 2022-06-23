@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { generate as shortUuid } from "short-uuid";
-import { UserService } from "../../shared/services/user.service";
+import { LobbyService } from "../../shared/services/lobby.service";
 import { Icon } from "../../shared/utils/icon.utils";
 
 @Component({
@@ -20,7 +20,7 @@ export class LobbyCreateComponent implements AfterViewInit {
 
   constructor(
     private readonly messageService: MessageService,
-    private readonly userService: UserService,
+    private readonly lobbyService: LobbyService,
     private readonly router: Router
   ) {}
 
@@ -40,7 +40,7 @@ export class LobbyCreateComponent implements AfterViewInit {
   }
 
   public startLobby(): void {
-    this.userService.addLobby(this.lobbyId);
+    this.lobbyService.create(this.lobbyId);
     this.router.navigateByUrl(`/lobby/${this.lobbyId}`);
   }
 }

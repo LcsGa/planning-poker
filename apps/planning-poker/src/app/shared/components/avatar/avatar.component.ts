@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { User } from "../../services/user.service";
+import { User } from "@planning-poker/shared";
 import { Icon } from "../../utils/icon.utils";
 
 @Component({
@@ -10,8 +10,6 @@ import { Icon } from "../../utils/icon.utils";
 export class AvatarComponent {
   @Input()
   public user!: User;
-
-  public readonly isHost = true;
 
   public readonly ICON = {
     CROWN: Icon.of("crown"),

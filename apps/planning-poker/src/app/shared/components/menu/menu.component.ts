@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { LobbyService } from "../../services/lobby.service";
 import { ThemeService } from "../../services/theme.service";
 import { Icon } from "../../utils/icon.utils";
 
@@ -8,6 +9,8 @@ import { Icon } from "../../utils/icon.utils";
   styleUrls: ["./menu.component.scss"],
 })
 export class MenuComponent {
+  public users$ = this.lobbyService.users$;
+
   public readonly ICON = {
     SUN: Icon.of("sun"),
     MOON: Icon.of("moon"),
@@ -15,7 +18,7 @@ export class MenuComponent {
 
   public theme?: "clair" | "sombre";
 
-  constructor(private readonly themeService: ThemeService) {}
+  constructor(private readonly lobbyService: LobbyService, private readonly themeService: ThemeService) {}
 
   public switchTheme(): void {
     this.theme = this.themeService.stored === "light" ? "sombre" : "clair";

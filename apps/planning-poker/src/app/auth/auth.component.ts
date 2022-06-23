@@ -22,7 +22,7 @@ export class AuthComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.fetchStored();
+    this.userService.initStored();
     this.userService.user$
       .pipe(
         take(1),
