@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { Socket } from "ngx-socket-io";
 import { LobbyService } from "../../shared/services/lobby.service";
 import { Icon } from "../../shared/utils/icon.utils";
 
@@ -39,6 +40,7 @@ export class LobbyJoinComponent implements AfterViewInit {
 
   public joinLobby(): void {
     if (this.lobbyIdCtrl.valid) {
+      this.lobbyService.join(this.lobbyIdCtrl.value);
       this.router.navigateByUrl(`/lobby/${this.lobbyIdCtrl.value}`);
     } else {
       this.lobbyIdCtrl.updateValueAndValidity();

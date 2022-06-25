@@ -1,4 +1,6 @@
 import { Component } from "@angular/core";
+import { SimpleUser, UserEvent } from "@planning-poker/shared";
+import { Socket } from "ngx-socket-io";
 
 @Component({
   selector: "pp-lobby-room",
@@ -21,6 +23,10 @@ export class LobbyRoomComponent {
     { points: "question" as const, isSelected: false },
     { points: "coffee" as const, isSelected: false },
   ];
+
+  constructor(private readonly socket: Socket) {
+    this.socket.fromEvent(UserEvent.CONNECT).subscribe(console.log);
+  }
 
   public selectCard(points: string): void {
     this.cards.forEach((card) => (card.isSelected = card.points === points && !card.isSelected));

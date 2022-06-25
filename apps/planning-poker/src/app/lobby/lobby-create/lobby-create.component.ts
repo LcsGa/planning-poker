@@ -40,7 +40,7 @@ export class LobbyCreateComponent implements AfterViewInit {
   }
 
   public startLobby(): void {
-    this.lobbyService.create(this.lobbyId);
+    this.lobbyService.join(this.lobbyId);
     this.router.navigateByUrl(`/lobby/${this.lobbyId}`);
   }
 }

@@ -7,3 +7,5 @@ export interface User {
   lobbyId?: string;
   isHost?: boolean;
 }
+
+export type SimpleUser = Omit<User, "lobbyId" | "isHost">;
