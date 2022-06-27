@@ -1,10 +1,12 @@
 import { Injectable } from "@angular/core";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Lobby, User, UserEvent } from "@planning-poker/shared";
 import { Socket } from "ngx-socket-io";
-import { BehaviorSubject, ReplaySubject } from "rxjs";
-import { filter, switchMap, take, tap } from "rxjs/operators";
+import { merge, ReplaySubject } from "rxjs";
+import { filter, take, tap } from "rxjs/operators";
 import { UserService } from "./user.service";
 
+@UntilDestroy()
 @Injectable({
   providedIn: "root",
 })
@@ -15,9 +17,11 @@ export class LobbyService {
   public readonly users$ = this.users$$.asObservable();
 
   constructor(private readonly socket: Socket, private readonly userService: UserService) {
-    socket
-      .fromEvent<Lobby>(UserEvent.CONNECT)
-      .pipe(tap((lobby) => this.users$$.next(lobby.users)))
+    merge(socket.fromEvent<Lobby>(UserEvent.CONNECT), socket.fromEvent<Lobby>(UserEvent.DISCONNECT))
+      .pipe(
+        tap((lobby) => this.users$$.next(lobby.users)),
+        untilDestroyed(this)
+      )
       .subscribe();
   }
 

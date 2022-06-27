@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Lobbies, User } from "@planning-poker/shared";
+import { Lobbies, Lobby, User } from "@planning-poker/shared";
 
 @Injectable()
 export class LobbyService {
@@ -18,5 +18,18 @@ export class LobbyService {
 
   private isHost(user: User): boolean {
     return this.lobbies[user.lobbyId].host === user.id;
+  }
+
+  public disconnect(userId: User["id"]): void {
+    const lobbyId: string | undefined = Object.entries(this.lobbies).find(([, lobby]) =>
+      lobby.users.find((user) => user.id === userId)
+    )?.[0];
+    if (this.lobbies[lobbyId]) {
+      if (this.lobbies[lobbyId]?.users.length === 1) {
+        delete this.lobbies[lobbyId];
+      } else {
+        this.lobbies[lobbyId].users = this.lobbies[lobbyId].users.filter((user) => user.id !== userId);
+      }
+    }
   }
 }

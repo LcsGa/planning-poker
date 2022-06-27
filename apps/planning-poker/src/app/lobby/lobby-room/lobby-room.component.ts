@@ -1,13 +1,15 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { SimpleUser, UserEvent } from "@planning-poker/shared";
 import { Socket } from "ngx-socket-io";
+import { take, tap } from "rxjs/operators";
+import { UserService } from "../../shared/services/user.service";
 
 @Component({
   selector: "pp-lobby-room",
   templateUrl: "./lobby-room.component.html",
   styleUrls: ["./lobby-room.component.scss"],
 })
-export class LobbyRoomComponent {
+export class LobbyRoomComponent implements OnDestroy {
   public readonly cards = [
     { points: "0" as const, isSelected: false },
     { points: "demi" as const, isSelected: false },
@@ -24,8 +26,15 @@ export class LobbyRoomComponent {
     { points: "coffee" as const, isSelected: false },
   ];
 
-  constructor(private readonly socket: Socket) {
-    this.socket.fromEvent(UserEvent.CONNECT).subscribe(console.log);
+  constructor(private readonly userService: UserService, private readonly socket: Socket) {}
+
+  ngOnDestroy(): void {
+    this.userService.user$
+      .pipe(
+        take(1),
+        tap((user) => this.socket.emit(UserEvent.DISCONNECT, user))
+      )
+      .subscribe();
   }
 
   public selectCard(points: string): void {

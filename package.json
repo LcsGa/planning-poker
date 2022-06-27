@@ -24,6 +24,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/platform-socket.io": "^8.4.6",
     "@nestjs/websockets": "^8.4.6",
+    "@ngneat/until-destroy": "^9.2.1",
     "@nrwl/angular": "14.1.9",
     "@types/socket.io": "^3.0.2",
     "ngx-socket-io": "^4.2.0",

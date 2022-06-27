@@ -12,9 +12,16 @@ export class LobbyGateway {
 
   @SubscribeMessage(UserEvent.CONNECT)
   connectUser(client: Socket, user: User) {
-    const lobbyId = user.lobbyId;
-    client.join(lobbyId);
+    client.join(user.lobbyId);
     this.lobbyService.join({ ...user, id: client.id });
-    this.server.in(lobbyId).emit(UserEvent.CONNECT, this.lobbyService.lobbies[lobbyId]);
+    this.server.in(user.lobbyId).emit(UserEvent.CONNECT, this.lobbyService.lobbies[user.lobbyId]);
+  }
+
+  @SubscribeMessage(UserEvent.DISCONNECT)
+  disconnectUser(client: Socket, user: User) {
+    this.lobbyService.disconnect(client.id);
+    if (this.lobbyService.lobbies[user.lobbyId]) {
+      this.server.in(user.lobbyId).emit(UserEvent.DISCONNECT, this.lobbyService.lobbies[user.lobbyId]);
+    }
   }
 }
