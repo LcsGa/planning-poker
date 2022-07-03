@@ -10,6 +10,16 @@ export class UserService {
   private readonly user$$ = new BehaviorSubject<User | null>(null);
   public readonly user$ = this.user$$.asObservable();
 
+  public set userId(userId: User["id"]) {
+    if (this.user$$.value) {
+      this.user$$.next({ ...this.user$$.value, id: userId });
+    }
+  }
+
+  public get userId(): User["id"] {
+    return this.user$$.value?.id;
+  }
+
   public create(name: string): void {
     this.user$$.next({ name, color: Color.random });
     localStorage.setItem(this.KEY, JSON.stringify(this.user$$.value));
@@ -25,7 +35,7 @@ export class UserService {
     this.user$$.next(storedUser ? JSON.parse(storedUser) : null);
   }
 
-  public joinLobby(lobbyId: string, { isHost } = { isHost: false }): void {
-    this.user$$.next({ ...this.user$$.value!, lobbyId, isHost });
+  public joinLobby(lobbyId: string): void {
+    this.user$$.next({ ...this.user$$.value!, lobbyId });
   }
 }

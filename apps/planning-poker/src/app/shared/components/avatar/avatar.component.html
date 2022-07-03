@@ -3,7 +3,7 @@
 }}</p-avatar>
 
 <div class="relative flex items-center w-full h-full">
-  <div class="absolute instet-0 flex items-center gap-2 max-w-full">
+  <div class="absolute instet-0 flex items-center gap-2 max-w-full" [class.user--is-me]="user.id === myId">
     <p class="truncate">{{ user.name }}</p>
 
     <i *ngIf="user.isHost" [class]="ICON.CROWN"></i>

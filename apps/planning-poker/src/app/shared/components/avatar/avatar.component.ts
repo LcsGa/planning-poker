@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { User } from "@planning-poker/shared";
+import { UserService } from "../../services/user.service";
 import { Icon } from "../../utils/icon.utils";
 
 @Component({
@@ -14,6 +15,10 @@ export class AvatarComponent {
   public readonly ICON = {
     CROWN: Icon.of("crown"),
   };
+
+  public readonly myId = this.userService.userId;
+
+  constructor(private readonly userService: UserService) {}
 
   public get background(): string {
     return `rgb(${this.user.color.r}, ${this.user.color.g}, ${this.user.color.b})`;

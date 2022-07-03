@@ -8,16 +8,11 @@ export class LobbyService {
   public join(user: User): void {
     const lobbyId = user.lobbyId;
     if (!this.lobbies[lobbyId]) this.lobbies[lobbyId] = { host: user.id, users: [] };
-    this.lobbies[lobbyId].users.push({
-      id: user.id,
-      name: user.name,
-      color: user.color,
-      isHost: this.isHost(user),
-    });
+    this.lobbies[lobbyId].users.push({ ...user, isHost: this.isHost(user) });
   }
 
   private isHost(user: User): boolean {
-    return this.lobbies[user.lobbyId]?.host === user.id;
+    return this.lobbies[user.lobbyId].host === user.id;
   }
 
   public disconnect(userId: User["id"]): void {

@@ -1,24 +1,33 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { User, UserEvent } from "@planning-poker/shared";
 import { Server, Socket } from "socket.io";
 import { LobbyService } from "./lobby.service";
 
 @WebSocketGateway(3000, { cors: { origin: "*" } })
-export class LobbyGateway {
+export class LobbyGateway implements OnGatewayDisconnect {
   @WebSocketServer()
   private readonly server: Server;
 
   constructor(private readonly lobbyService: LobbyService) {}
 
+  handleDisconnect(client: Socket): void {
+    const disconnectedUser = Object.values(this.lobbyService.lobbies)
+      .reduce<User[]>((acc, curr) => [...acc, ...curr.users], [])
+      .find((user) => user.id === client.id);
+    if (disconnectedUser) this.disconnectUser(client, disconnectedUser);
+  }
+
   @SubscribeMessage(UserEvent.CONNECT)
-  connectUser(client: Socket, user: User) {
+  connectUser(client: Socket, user: User): void {
     client.join(user.lobbyId);
-    this.lobbyService.join({ ...user, id: client.id });
+    const me = { ...user, id: client.id };
+    this.lobbyService.join(me);
+    client.emit(UserEvent.MY_ID, client.id);
     this.server.in(user.lobbyId).emit(UserEvent.CONNECT, this.lobbyService.lobbies[user.lobbyId]);
   }
 
   @SubscribeMessage(UserEvent.DISCONNECT)
-  disconnectUser(client: Socket, user: User) {
+  disconnectUser(client: Socket, user: User): void {
     client.leave(user.lobbyId);
     this.lobbyService.disconnect(client.id);
     if (this.lobbyService.lobbies[user.lobbyId]) {
