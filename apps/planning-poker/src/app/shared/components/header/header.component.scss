@@ -18,6 +18,10 @@
   }
 }
 
+@function hexToRgb($hex) {
+  @return red($hex), green($hex), blue($hex);
+}
+
 .header {
   &__logo {
     width: 28px;

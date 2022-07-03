@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 import { ThemeService } from "../../services/theme.service";
 import { Icon } from "../../utils/icon.utils";
 
@@ -13,4 +14,10 @@ export class HeaderComponent {
   };
 
   public displayMenu = false;
+
+  constructor(private readonly router: Router) {}
+
+  public goToAuth(): void {
+    this.router.navigateByUrl("/auth");
+  }
 }

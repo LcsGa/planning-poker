@@ -1,4 +1,4 @@
-<div class="flex gap-2 cursor-pointer" routerLink="/auth">
+<div class="flex items-center gap-2 cursor-pointer" [tabIndex]="0" (click)="goToAuth()" (keydown.enter)="goToAuth()">
   <img class="header__logo" src="favicon.svg" alt="Icone PlanningPoker" />
 
   <h1 class="header__title font-bold">PlanningPoker</h1>
