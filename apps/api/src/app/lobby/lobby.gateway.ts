@@ -19,6 +19,7 @@ export class LobbyGateway {
 
   @SubscribeMessage(UserEvent.DISCONNECT)
   disconnectUser(client: Socket, user: User) {
+    client.leave(user.lobbyId);
     this.lobbyService.disconnect(client.id);
     if (this.lobbyService.lobbies[user.lobbyId]) {
       this.server.in(user.lobbyId).emit(UserEvent.DISCONNECT, this.lobbyService.lobbies[user.lobbyId]);

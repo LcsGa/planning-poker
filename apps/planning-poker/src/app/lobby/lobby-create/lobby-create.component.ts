@@ -25,6 +25,7 @@ export class LobbyCreateComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
+    this.lobbyService.join(this.lobbyId);
     this.copyLobbyId();
   }
 
@@ -40,7 +41,6 @@ export class LobbyCreateComponent implements AfterViewInit {
   }
 
   public startLobby(): void {
-    this.lobbyService.join(this.lobbyId);
     this.router.navigateByUrl(`/lobby/${this.lobbyId}`);
   }
 }

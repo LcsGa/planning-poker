@@ -17,19 +17,25 @@ export class LobbyService {
   }
 
   private isHost(user: User): boolean {
-    return this.lobbies[user.lobbyId].host === user.id;
+    return this.lobbies[user.lobbyId]?.host === user.id;
   }
 
   public disconnect(userId: User["id"]): void {
-    const lobbyId: string | undefined = Object.entries(this.lobbies).find(([, lobby]) =>
-      lobby.users.find((user) => user.id === userId)
-    )?.[0];
+    const lobbyId = this.getLobbyId(userId);
     if (this.lobbies[lobbyId]) {
       if (this.lobbies[lobbyId]?.users.length === 1) {
         delete this.lobbies[lobbyId];
       } else {
         this.lobbies[lobbyId].users = this.lobbies[lobbyId].users.filter((user) => user.id !== userId);
+        if (this.lobbies[lobbyId].host === userId) {
+          this.lobbies[lobbyId].host = this.lobbies[lobbyId].users[0].id;
+          this.lobbies[lobbyId].users[0].isHost = true;
+        }
       }
     }
+  }
+
+  private getLobbyId(userId: string): string | undefined {
+    return Object.entries(this.lobbies).find(([, lobby]) => lobby.users.find((user) => user.id === userId))?.[0];
   }
 }
