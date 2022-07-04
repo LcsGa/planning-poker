@@ -10,5 +10,8 @@ export class PokerCardComponent {
   public points?: string;
 
   @Input()
-  public isSelected = false;
+  public selected = false;
+
+  @Input()
+  public disabled = false;
 }

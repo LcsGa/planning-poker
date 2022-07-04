@@ -3,6 +3,7 @@ export * from "./events/user.event";
 
 // Models
 export * from "./models/lobby";
+export * from "./models/poker-card";
 export * from "./models/user";
 
 // Types

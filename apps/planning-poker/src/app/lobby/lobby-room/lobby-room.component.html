@@ -2,7 +2,8 @@
   <pp-poker-card
     *ngFor="let card of cards"
     [points]="card.points"
-    [isSelected]="card.isSelected"
+    [selected]="card.selected"
+    [disabled]="cardsDisabled"
     (click)="selectCard(card.points)"
     (keydown.enter)="selectCard(card.points)"
   ></pp-poker-card>
