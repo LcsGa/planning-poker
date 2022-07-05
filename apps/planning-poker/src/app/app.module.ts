@@ -20,7 +20,6 @@ import { routes } from "./app.routes";
     RouterModule.forRoot(routes),
     SocketIoModule.forRoot({ url: "ws://localhost:3000" }),
   ],
-  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
