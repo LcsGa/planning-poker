@@ -2,8 +2,6 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
-    "api": "apps/api",
-    "planning-poker": "apps/planning-poker",
     "-libs-models": {
       "root": "libs/libs/models",
       "sourceRoot": "libs/libs/models/src",
@@ -11,13 +9,41 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": [
-            "{options.outputFile}"
-          ],
+          "outputs": ["{options.outputFile}"],
           "options": {
-            "lintFilePatterns": [
-              "libs/libs/models/**/*.ts"
-            ]
+            "lintFilePatterns": ["libs/libs/models/**/*.ts"]
+          }
+        }
+      },
+      "tags": []
+    },
+    "api": "apps/api",
+    "libs-shared-src-models": {
+      "root": "libs/libs/shared/src/models",
+      "sourceRoot": "libs/libs/shared/src/models/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/libs/shared/src/models/**/*.ts"]
+          }
+        }
+      },
+      "tags": []
+    },
+    "planning-poker": "apps/planning-poker",
+    "shared": {
+      "root": "libs/shared",
+      "sourceRoot": "libs/shared/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/shared/**/*.ts"]
           }
         }
       },
@@ -30,51 +56,9 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": [
-            "{options.outputFile}"
-          ],
+          "outputs": ["{options.outputFile}"],
           "options": {
-            "lintFilePatterns": [
-              "libs/types/**/*.ts"
-            ]
-          }
-        }
-      },
-      "tags": []
-    },
-    "shared": {
-      "root": "libs/shared",
-      "sourceRoot": "libs/shared/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": [
-            "{options.outputFile}"
-          ],
-          "options": {
-            "lintFilePatterns": [
-              "libs/shared/**/*.ts"
-            ]
-          }
-        }
-      },
-      "tags": []
-    },
-    "libs-shared-src-models": {
-      "root": "libs/libs/shared/src/models",
-      "sourceRoot": "libs/libs/shared/src/models/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": [
-            "{options.outputFile}"
-          ],
-          "options": {
-            "lintFilePatterns": [
-              "libs/libs/shared/src/models/**/*.ts"
-            ]
+            "lintFilePatterns": ["libs/types/**/*.ts"]
           }
         }
       },

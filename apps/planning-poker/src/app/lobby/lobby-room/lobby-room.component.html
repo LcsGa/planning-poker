@@ -1,10 +1,26 @@
-<div class="grid grid-cols-fit-4 sm:grid-cols-fit-5 md:grid-cols-fit-6 auto-rows-fr gap-6 sm:gap-8 md:gap-10">
-  <pp-poker-card
-    *ngFor="let card of cards"
-    [points]="card.points"
-    [selected]="card.selected"
-    [disabled]="cardsDisabled"
-    (click)="selectCard(card.points)"
-    (keydown.enter)="selectCard(card.points)"
-  ></pp-poker-card>
+<div class="flex-1 flex items-center">
+  <div
+    *ngIf="started; else waiting"
+    class="flex-1 grid grid-cols-fit-4 sm:grid-cols-fit-5 md:grid-cols-fit-6 auto-rows-fr gap-6 sm:gap-8 md:gap-10"
+  >
+    <pp-poker-card
+      *ngFor="let card of cards"
+      [points]="card.points"
+      [selected]="card.selected"
+      (click)="selectCard(card.points)"
+      (keydown.enter)="selectCard(card.points)"
+    ></pp-poker-card>
+  </div>
+
+  <ng-template #waiting>
+    <p-card header="En attente de l'hôte...">
+      <pp-waiting class="w-full"></pp-waiting>
+    </p-card>
+  </ng-template>
 </div>
+
+<p-toolbar styleClass="p-2">
+  <p-chip [icon]="ICON.CHECK" label="10 / 18"></p-chip>
+
+  <button pButton pRipple class="p-button-sm" (click)="started = true" label="Démarrer"></button>
+</p-toolbar>

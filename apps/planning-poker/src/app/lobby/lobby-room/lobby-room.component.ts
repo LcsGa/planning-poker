@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from "@angular/core";
 import { PokerCard } from "@planning-poker/shared";
 import { LobbyService } from "../../shared/services/lobby.service";
+import { Icon } from "../../shared/utils/icon.utils";
 
 @Component({
   selector: "pp-lobby-room",
@@ -24,7 +25,11 @@ export class LobbyRoomComponent implements OnDestroy {
     { points: "coffee", selected: false },
   ];
 
-  public cardsDisabled = true;
+  public readonly ICON = {
+    CHECK: Icon.of("circle-check"),
+  };
+
+  public started = false;
 
   constructor(private readonly lobbyService: LobbyService) {}
 
@@ -33,8 +38,6 @@ export class LobbyRoomComponent implements OnDestroy {
   }
 
   public selectCard(points: string): void {
-    this.cards.forEach((card) => {
-      if (!this.cardsDisabled) card.selected = card.points === points && !card.selected;
-    });
+    this.cards.forEach((card) => (card.selected = card.points === points && !card.selected));
   }
 }
