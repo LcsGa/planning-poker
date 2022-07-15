@@ -20,6 +20,7 @@ export class LobbyRoomComponent implements OnDestroy {
     { points: "13", selected: false },
     { points: "20", selected: false },
     { points: "40", selected: false },
+    { points: "80", selected: false },
     { points: "100", selected: false },
     { points: "question", selected: false },
     { points: "coffee", selected: false },
