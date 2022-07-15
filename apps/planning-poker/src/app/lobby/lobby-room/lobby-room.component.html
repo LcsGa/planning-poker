@@ -1,7 +1,7 @@
 <div class="flex-1 flex items-center">
-  <p-card header="En attente de l'hôte...">
+  <p-card [header]="(pendingMessage$ | async)!">
     <pp-waiting class="w-full"></pp-waiting>
   </p-card>
 </div>
 
-<button *ngIf="isHost$ | async" pButton pRipple class="w-full" routerLink="vote" label="Démarrer"></button>
+<button *ngIf="isHost$ | async" pButton pRipple class="w-full" (click)="start()" label="Démarrer"></button>

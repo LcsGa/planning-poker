@@ -1,4 +1,5 @@
 // Events
+export * from "./events/planning.event";
 export * from "./events/user.event";
 
 // Models

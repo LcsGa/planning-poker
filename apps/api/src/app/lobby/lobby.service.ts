@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Lobbies, Lobby, User } from "@planning-poker/shared";
+import { Lobbies, User } from "@planning-poker/shared";
 
 @Injectable()
 export class LobbyService {
