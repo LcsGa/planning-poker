@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
-import { User } from "@planning-poker/shared";
-import { map } from "rxjs/operators";
+import { map, take } from "rxjs/operators";
 import { UserService } from "../../shared/services/user.service";
 import { Icon } from "../../shared/utils/icon.utils";
 
@@ -11,8 +10,8 @@ import { Icon } from "../../shared/utils/icon.utils";
 })
 export class LobbyInitComponent {
   public readonly initHeader$ = this.userService.user$.pipe(
-    map((user) => user as User),
-    map((user) => `${user.name}, que veux-tu faire maintenant ?`)
+    take(1),
+    map((user) => `${user!.name}, que veux-tu faire maintenant ?`)
   );
 
   public readonly ICON = {

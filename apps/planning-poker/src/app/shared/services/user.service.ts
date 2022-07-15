@@ -10,18 +10,12 @@ export class UserService {
   private readonly user$$ = new BehaviorSubject<User | null>(null);
   public readonly user$ = this.user$$.asObservable();
 
-  public set userId(userId: User["id"]) {
-    if (this.user$$.value) {
-      this.user$$.next({ ...this.user$$.value, id: userId });
-    }
-  }
-
-  public get userId(): User["id"] {
-    return this.user$$.value?.id;
+  public updateUser(user: User): void {
+    this.user$$.next(user);
   }
 
   public create(name: string): void {
-    this.user$$.next({ name, color: Color.random });
+    this.updateUser({ name, color: Color.random });
     localStorage.setItem(this.KEY, JSON.stringify(this.user$$.value));
   }
 
@@ -36,6 +30,6 @@ export class UserService {
   }
 
   public joinLobby(lobbyId: string): void {
-    this.user$$.next({ ...this.user$$.value!, lobbyId });
+    this.updateUser({ ...this.user$$.value!, lobbyId });
   }
 }

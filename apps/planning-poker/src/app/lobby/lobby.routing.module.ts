@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
+import { IsAuthenticatedGuard } from "../shared/guards/is-authenticated.guard";
 
 @NgModule({
   imports: [
@@ -21,7 +22,22 @@ import { RouterModule } from "@angular/router";
           },
           {
             path: ":id",
-            loadChildren: () => import("./lobby-room/lobby-room.module").then((m) => m.LobbyRoomModule),
+            canActivate: [IsAuthenticatedGuard],
+            children: [
+              { path: "", loadChildren: () => import("./lobby-room/lobby-room.module").then((m) => m.LobbyRoomModule) },
+              {
+                path: "vote",
+                loadChildren: () =>
+                  import("./lobby-room/lobby-room-vote/lobby-room-vote.module").then((m) => m.LobbyRoomVoteModule),
+              },
+              {
+                path: "results",
+                loadChildren: () =>
+                  import("./lobby-room/lobby-room-results/lobby-room-results.module").then(
+                    (m) => m.LobbyRoomResultsModule
+                  ),
+              },
+            ],
           },
         ],
       },

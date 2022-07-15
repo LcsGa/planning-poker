@@ -1,5 +1,5 @@
 export enum UserEvent {
   CONNECT = "connect-user",
-  MY_ID = "my-id",
+  ME = "me",
   DISCONNECT = "disconnect-user",
 }

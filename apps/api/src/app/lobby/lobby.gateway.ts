@@ -22,7 +22,10 @@ export class LobbyGateway implements OnGatewayDisconnect {
     client.join(user.lobbyId);
     const me = { ...user, id: client.id };
     this.lobbyService.join(me);
-    client.emit(UserEvent.MY_ID, client.id);
+    client.emit(
+      UserEvent.ME,
+      this.lobbyService.lobbies[user.lobbyId].users.find((user) => user.id === client.id)
+    );
     this.server.in(user.lobbyId).emit(UserEvent.CONNECT, this.lobbyService.lobbies[user.lobbyId]);
   }
 

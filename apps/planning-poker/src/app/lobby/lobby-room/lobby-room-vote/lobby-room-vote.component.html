@@ -1,0 +1,17 @@
+<ng-container *ngIf="usersLength$ | async as usersLength">
+  <p-chip *ngIf="!!usersLength" [icon]="ICON.CHECK" [label]="0 + ' / ' + usersLength"></p-chip>
+</ng-container>
+
+<div class="flex-1 flex items-center">
+  <div class="grid grid-cols-fit-4 sm:grid-cols-fit-5 md:grid-cols-fit-6 auto-rows-fr gap-6 sm:gap-8 md:gap-10">
+    <pp-poker-card
+      *ngFor="let card of cards"
+      [points]="card.points"
+      [selected]="card.selected"
+      (click)="selectCard(card.points)"
+      (keydown.enter)="selectCard(card.points)"
+    ></pp-poker-card>
+  </div>
+</div>
+
+<button *ngIf="true" pButton pRipple class="w-full" label="Terminer" routerLink="../results"></button>

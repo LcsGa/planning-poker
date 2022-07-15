@@ -37,12 +37,12 @@ export class LobbyService {
         filter(Boolean),
         tap((user) => this.socket.emit(UserEvent.CONNECT, user)),
         switchMap(() =>
-          this.socket.fromEvent(UserEvent.MY_ID).pipe(
+          this.socket.fromEvent(UserEvent.ME).pipe(
             take(1),
-            map((userId) => userId as string)
+            map((user) => user as User)
           )
         ),
-        tap((userId) => (this.userService.userId = userId))
+        tap((user) => this.userService.updateUser(user))
       )
       .subscribe();
   }
