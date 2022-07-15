@@ -1,7 +1,9 @@
 import { Component } from "@angular/core";
-import { PokerCard } from "@planning-poker/shared";
-import { map, take } from "rxjs/operators";
+import { PlanningEvent, PokerCard } from "@planning-poker/shared";
+import { Socket } from "ngx-socket-io";
+import { map, startWith, take, tap } from "rxjs/operators";
 import { LobbyService } from "../../../shared/services/lobby.service";
+import { UserService } from "../../../shared/services/user.service";
 import { Icon } from "../../../shared/utils/icon.utils";
 
 @Component({
@@ -36,9 +38,29 @@ export class LobbyRoomVoteComponent {
     map((users) => users.length)
   );
 
-  constructor(private readonly lobbyService: LobbyService) {}
+  public voteCount$ = this.socket.fromEvent(PlanningEvent.VOTE_COUNT).pipe(startWith(0));
 
-  public selectCard(points: string): void {
+  constructor(
+    private readonly userService: UserService,
+    private readonly lobbyService: LobbyService,
+    private readonly socket: Socket
+  ) {}
+
+  public selectCard(points: PokerCard["points"]): void {
     this.cards.forEach((card) => (card.selected = card.points === points && !card.selected));
+    this.vote();
+  }
+
+  private get points(): PokerCard["points"] | undefined {
+    return this.cards.find((card) => card.selected)?.points;
+  }
+
+  private vote(): void {
+    this.userService.user$
+      .pipe(
+        take(1),
+        tap((user) => this.socket.emit(PlanningEvent.VOTE, { user, points: this.points }))
+      )
+      .subscribe();
   }
 }

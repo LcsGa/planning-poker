@@ -1,4 +1,5 @@
 import { ColorTriplet } from "../types/color-triplet";
+import { PokerCard } from "./poker-card";
 
 export interface User {
   id?: string;
@@ -6,6 +7,5 @@ export interface User {
   color: ColorTriplet;
   lobbyId?: string;
   isHost?: boolean;
+  vote?: PokerCard["points"];
 }
-
-export type SimpleUser = Omit<User, "lobbyId" | "isHost">;

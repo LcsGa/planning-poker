@@ -7,7 +7,7 @@ export class LobbyService {
 
   public join(user: User): void {
     const lobbyId = user.lobbyId;
-    if (!this.lobbies[lobbyId]) this.lobbies[lobbyId] = { host: user.id, users: [] };
+    if (!this.lobbies[lobbyId]) this.lobbies[lobbyId] = { host: user.id, users: [], started: false };
     this.lobbies[lobbyId].users.push({ ...user, isHost: this.isHost(user) });
   }
 

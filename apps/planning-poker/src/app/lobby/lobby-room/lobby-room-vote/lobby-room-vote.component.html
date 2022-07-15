@@ -1,5 +1,5 @@
 <ng-container *ngIf="usersLength$ | async as usersLength">
-  <p-chip *ngIf="!!usersLength" [icon]="ICON.CHECK" [label]="0 + ' / ' + usersLength"></p-chip>
+  <p-chip *ngIf="!!usersLength" [icon]="ICON.CHECK" [label]="(voteCount$ | async) + ' / ' + usersLength"></p-chip>
 </ng-container>
 
 <div class="flex-1 flex items-center">

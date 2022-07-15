@@ -5,7 +5,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
-import { PlanningEvent, User, UserEvent } from "@planning-poker/shared";
+import { PlanningEvent, PokerCard, User, UserEvent } from "@planning-poker/shared";
 import { Server, Socket } from "socket.io";
 import { LobbyService } from "./lobby.service";
 
@@ -47,5 +47,17 @@ export class LobbyGateway implements OnGatewayDisconnect {
   @SubscribeMessage(PlanningEvent.START)
   startPlanning(@MessageBody() lobbyId: string): void {
     this.server.in(lobbyId).emit(PlanningEvent.START);
+    this.lobbyService.lobbies[lobbyId].started = true;
+  }
+
+  @SubscribeMessage(PlanningEvent.VOTE)
+  vote(@MessageBody() { user, points }: { user: User; points?: PokerCard["points"] }): void {
+    this.lobbyService.lobbies[user.lobbyId].users.find((u) => u.id === user.id).vote = points;
+    this.server
+      .in(user.lobbyId)
+      .emit(
+        PlanningEvent.VOTE_COUNT,
+        this.lobbyService.lobbies[user.lobbyId].users.filter((user) => user.vote !== undefined).length
+      );
   }
 }
