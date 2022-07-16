@@ -3,4 +3,5 @@ export enum PlanningEvent {
   VOTE = "vote",
   VOTE_COUNT = "vote-count",
   VOTE_DONE = "vote-done",
+  RESULTS = "results",
 }
