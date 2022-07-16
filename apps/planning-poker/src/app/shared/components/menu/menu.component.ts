@@ -1,7 +1,14 @@
 import { Component } from "@angular/core";
+import { Observable } from "rxjs";
+import { map, tap } from "rxjs/operators";
 import { LobbyService } from "../../services/lobby.service";
-import { ThemeService } from "../../services/theme.service";
+import { ThemeLabel, ThemeService } from "../../services/theme.service";
 import { Icon } from "../../utils/icon.utils";
+
+interface ThemeIcon {
+  on: string;
+  off: string;
+}
 
 @Component({
   selector: "pp-menu",
@@ -16,12 +23,24 @@ export class MenuComponent {
     MOON: Icon.of("moon"),
   };
 
-  public theme?: "clair" | "sombre";
+  public themeLabel!: ThemeLabel;
 
-  constructor(private readonly lobbyService: LobbyService, private readonly themeService: ThemeService) {}
+  public readonly icon$: Observable<ThemeIcon> = this.themeService.theme$.pipe(
+    map((theme) =>
+      theme === "light" ? { on: this.ICON.MOON, off: this.ICON.SUN } : { on: this.ICON.SUN, off: this.ICON.MOON }
+    )
+  );
+
+  constructor(private readonly lobbyService: LobbyService, private readonly themeService: ThemeService) {
+    themeService.theme$.pipe(tap((theme) => (this.themeLabel = theme === "light" ? "clair" : "sombre"))).subscribe();
+  }
 
   public switchTheme(): void {
-    this.theme = this.themeService.stored === "light" ? "sombre" : "clair";
-    this.themeService.switch(this.themeService.stored === "light" ? "dark" : "light");
+    this.themeService.theme$
+      .pipe(
+        tap((theme) => (this.themeLabel = theme === "light" ? "sombre" : "clair")),
+        tap((theme) => this.themeService.switch(theme === "light" ? "dark" : "light"))
+      )
+      .subscribe();
   }
 }
