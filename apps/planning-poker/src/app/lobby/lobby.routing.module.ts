@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { IsAuthenticatedGuard } from "../shared/guards/is-authenticated.guard";
+import { LeaveLobbyGuard } from "../shared/guards/leave-lobby.guard";
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { IsAuthenticatedGuard } from "../shared/guards/is-authenticated.guard";
           {
             path: ":id",
             canActivate: [IsAuthenticatedGuard],
+            canDeactivate: [LeaveLobbyGuard],
             children: [
               { path: "", loadChildren: () => import("./lobby-room/lobby-room.module").then((m) => m.LobbyRoomModule) },
               {
