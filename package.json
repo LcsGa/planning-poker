@@ -27,6 +27,7 @@
     "@ngneat/until-destroy": "^9.2.1",
     "@nrwl/angular": "14.1.9",
     "@types/socket.io": "^3.0.2",
+    "chart.js": "^3.8.0",
     "ngx-socket-io": "^4.2.0",
     "primeicons": "^5.0.0",
     "primeng": "^13.4.1",
