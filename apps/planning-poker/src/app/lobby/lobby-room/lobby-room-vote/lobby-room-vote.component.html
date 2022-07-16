@@ -14,4 +14,4 @@
   </div>
 </div>
 
-<button *ngIf="true" pButton pRipple class="w-full" label="Terminer" routerLink="../results"></button>
+<button *ngIf="isHost$ | async" pButton pRipple class="w-full" label="Terminer" (click)="completeVotes()"></button>

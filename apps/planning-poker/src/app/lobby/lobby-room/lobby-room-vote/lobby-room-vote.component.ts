@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import { PlanningEvent, PokerCard } from "@planning-poker/shared";
 import { Socket } from "ngx-socket-io";
 import { map, startWith, take, tap } from "rxjs/operators";
@@ -33,6 +34,10 @@ export class LobbyRoomVoteComponent {
     { points: "coffee", selected: false },
   ];
 
+  private user$ = this.userService.user$.pipe(take(1));
+
+  public isHost$ = this.user$.pipe(map((user) => user?.isHost));
+
   public usersLength$ = this.lobbyService.users$.pipe(
     take(1),
     map((users) => users.length)
@@ -43,8 +48,14 @@ export class LobbyRoomVoteComponent {
   constructor(
     private readonly userService: UserService,
     private readonly lobbyService: LobbyService,
-    private readonly socket: Socket
-  ) {}
+    private readonly socket: Socket,
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute
+  ) {
+    socket
+      .fromOneTimeEvent(PlanningEvent.VOTE_DONE)
+      .then(() => router.navigate(["..", "results"], { relativeTo: activatedRoute }));
+  }
 
   public selectCard(points: PokerCard["points"]): void {
     this.cards.forEach((card) => (card.selected = card.points === points && !card.selected));
@@ -56,11 +67,10 @@ export class LobbyRoomVoteComponent {
   }
 
   private vote(): void {
-    this.userService.user$
-      .pipe(
-        take(1),
-        tap((user) => this.socket.emit(PlanningEvent.VOTE, { user, points: this.points }))
-      )
-      .subscribe();
+    this.user$.pipe(tap((user) => this.socket.emit(PlanningEvent.VOTE, { user, points: this.points }))).subscribe();
+  }
+
+  public completeVotes(): void {
+    this.user$.pipe(tap((user) => this.socket.emit(PlanningEvent.VOTE_DONE, user?.lobbyId))).subscribe();
   }
 }

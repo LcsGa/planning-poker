@@ -60,4 +60,9 @@ export class LobbyGateway implements OnGatewayDisconnect {
         this.lobbyService.lobbies[user.lobbyId].users.filter((user) => user.vote !== undefined).length
       );
   }
+
+  @SubscribeMessage(PlanningEvent.VOTE_DONE)
+  completeVote(@MessageBody() lobbyId: string): void {
+    this.server.in(lobbyId).emit(PlanningEvent.VOTE_DONE);
+  }
 }
