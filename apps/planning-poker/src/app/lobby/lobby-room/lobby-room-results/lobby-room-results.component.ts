@@ -3,6 +3,7 @@ import { PlanningEvent } from "@planning-poker/shared";
 import { ChartData, ChartOptions } from "chart.js";
 import { Socket } from "ngx-socket-io";
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { ThemeService } from "../../../shared/services/theme.service";
 import { Color } from "../../../shared/utils/color.utils";
 
@@ -14,11 +15,13 @@ import { Color } from "../../../shared/utils/color.utils";
 export class LobbyRoomResultsComponent {
   public results?: ChartData;
 
-  private chartOptions: ChartOptions = {
-    plugins: {
-      // legend: { labels: { color: this.themeService.stored === "dark" ? Color.TEXT.DARK : Color.TEXT.LIGHT } },
-    },
-  };
+  public readonly chartOptions$: Observable<ChartOptions> = this.themeService.theme$.pipe(
+    map((theme) => ({
+      plugins: {
+        legend: { labels: { color: theme === "dark" ? Color.TEXT.DARK : Color.TEXT.LIGHT } },
+      },
+    }))
+  );
 
   private readonly labels = ["0", "1/2", "1", "2", "3", "5", "8", "13", "20", "40", "80", "100", "?", "Café"];
 

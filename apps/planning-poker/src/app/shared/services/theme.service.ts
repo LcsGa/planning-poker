@@ -1,7 +1,6 @@
 import { DOCUMENT } from "@angular/common";
 import { Inject, Injectable } from "@angular/core";
 import { ReplaySubject } from "rxjs";
-import { take } from "rxjs/operators";
 
 type Theme = "dark" | "light";
 
@@ -14,7 +13,7 @@ export class ThemeService {
   private readonly KEY = "theme";
 
   private readonly theme$$ = new ReplaySubject<Theme>(1);
-  public readonly theme$ = this.theme$$.pipe(take(1));
+  public readonly theme$ = this.theme$$.asObservable();
 
   constructor(@Inject(DOCUMENT) private readonly document: Document) {}
 
