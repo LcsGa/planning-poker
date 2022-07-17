@@ -41,7 +41,12 @@ export class LobbyGateway implements OnGatewayDisconnect {
     client.leave(user.lobbyId);
     this.lobbyService.disconnect(client.id);
     if (this.lobbyService.lobbies[user.lobbyId]) {
-      this.server.in(user.lobbyId).emit(UserEvent.DISCONNECT, this.lobbyService.lobbies[user.lobbyId]);
+      const lobbyServer = this.server.in(user.lobbyId);
+      lobbyServer.emit(UserEvent.DISCONNECT, this.lobbyService.lobbies[user.lobbyId]);
+      lobbyServer.emit(
+        PlanningEvent.VOTE_COUNT,
+        this.lobbyService.lobbies[user.lobbyId].users.filter((user) => user.vote !== undefined).length
+      );
     }
   }
 

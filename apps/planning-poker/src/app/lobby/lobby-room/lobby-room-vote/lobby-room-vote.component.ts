@@ -38,10 +38,7 @@ export class LobbyRoomVoteComponent {
 
   public isHost$ = this.user$.pipe(map((user) => user?.isHost));
 
-  public usersLength$ = this.lobbyService.users$.pipe(
-    take(1),
-    map((users) => users.length)
-  );
+  public usersLength$ = this.lobbyService.users$.pipe(map((users) => users.length));
 
   public voteCount$ = this.socket.fromEvent(PlanningEvent.VOTE_COUNT).pipe(startWith(0));
 
