@@ -8,13 +8,14 @@ import {
 import { PlanningEvent, PokerCard, User, UserEvent } from "@planning-poker/shared";
 import { Server, Socket } from "socket.io";
 import { LobbyService } from "./lobby.service";
+import { FormatResultsPipe } from "./pipes/format-results.pipe";
 
 @WebSocketGateway(3000, { cors: { origin: "*" } })
 export class LobbyGateway implements OnGatewayDisconnect {
   @WebSocketServer()
   private readonly server: Server;
 
-  constructor(private readonly lobbyService: LobbyService) {}
+  constructor(private readonly lobbyService: LobbyService, private readonly formatResultsPipe: FormatResultsPipe) {}
 
   handleDisconnect(client: Socket): void {
     const disconnectedUser = Object.values(this.lobbyService.lobbies)
@@ -64,5 +65,18 @@ export class LobbyGateway implements OnGatewayDisconnect {
   @SubscribeMessage(PlanningEvent.VOTE_DONE)
   completeVote(@MessageBody() lobbyId: string): void {
     this.server.in(lobbyId).emit(PlanningEvent.VOTE_DONE);
+  }
+
+  @SubscribeMessage(PlanningEvent.RESULTS)
+  askForResutls(@MessageBody() lobbyId: string): void {
+    this.server
+      .in(lobbyId)
+      .emit(PlanningEvent.RESULTS, this.formatResultsPipe.transform(this.lobbyService.lobbies[lobbyId].users));
+  }
+
+  @SubscribeMessage(PlanningEvent.VOTE_NEXT)
+  keepVoting(@MessageBody() lobbyId: string): void {
+    this.lobbyService.lobbies[lobbyId].users.forEach((user) => (user.vote = undefined));
+    this.server.in(lobbyId).emit(PlanningEvent.VOTE_NEXT);
   }
 }

@@ -1,3 +1,28 @@
-<p-card styleClass="w-full" header="Résultats des votes">
-  <p-chart [responsive]="true" type="doughnut" [data]="results" [options]="chartOptions$ | async"></p-chart>
-</p-card>
+<div class="flex-1 flex items-center">
+  <p-card class="w-full" header="Résultats des votes">
+    <p-chart
+      [responsive]="true"
+      type="doughnut"
+      [data]="resultsData$ | async"
+      [options]="chartOptions$ | async"
+    ></p-chart>
+
+    <ng-template pTemplate="footer">
+      <div class="flex flex-col gap-2">
+        <pp-display-result
+          *ngIf="(average$ | async) !== undefined"
+          label="Moyenne"
+          [value]="(average$ | async)!"
+        ></pp-display-result>
+
+        <pp-display-result
+          *ngIf="(median$ | async) !== undefined"
+          label="Médiane"
+          [value]="(median$ | async)!"
+        ></pp-display-result>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
+
+<button *ngIf="isHost$ | async" class="w-full" pButton pRipple label="Continuer" (click)="keepVoting()"></button>

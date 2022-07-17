@@ -6,8 +6,10 @@ import { LobbyGateway } from "./lobby/lobby.gateway";
 
 import { LobbyService } from "./lobby/lobby.service";
 
+import { FormatResultsPipe } from "./lobby/pipes/format-results.pipe";
+
 @Module({
   controllers: [AppController],
-  providers: [LobbyGateway, LobbyService],
+  providers: [FormatResultsPipe, LobbyGateway, LobbyService],
 })
 export class AppModule {}
