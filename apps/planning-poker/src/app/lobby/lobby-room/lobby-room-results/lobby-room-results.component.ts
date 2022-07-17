@@ -26,7 +26,7 @@ export class LobbyRoomResultsComponent {
 
   private readonly user$ = this.userService.user$.pipe(take(1));
 
-  public readonly isHost$ = this.user$.pipe(map((user) => user?.isHost));
+  public readonly isHost$ = this.userService.user$.pipe(map((user) => user?.isHost));
 
   private results$ = from(this.socket.fromOneTimeEvent<VoteResult[]>(PlanningEvent.RESULTS)).pipe(
     map((results) => results.filter(([, count]) => count !== 0)),

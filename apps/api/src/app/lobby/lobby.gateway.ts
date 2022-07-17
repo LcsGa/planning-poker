@@ -29,10 +29,10 @@ export class LobbyGateway implements OnGatewayDisconnect {
     client.join(user.lobbyId);
     const me = { ...user, id: client.id };
     this.lobbyService.join(me);
-    client.emit(
-      UserEvent.ME,
-      this.lobbyService.lobbies[user.lobbyId].users.find((user) => user.id === client.id)
-    );
+    client.emit(UserEvent.ME, {
+      user: this.lobbyService.lobbies[user.lobbyId].users.find((user) => user.id === client.id),
+      state: this.lobbyService.lobbies[user.lobbyId].state,
+    });
     this.server.in(user.lobbyId).emit(UserEvent.CONNECT, this.lobbyService.lobbies[user.lobbyId]);
   }
 
@@ -53,7 +53,7 @@ export class LobbyGateway implements OnGatewayDisconnect {
   @SubscribeMessage(PlanningEvent.START)
   startPlanning(@MessageBody() lobbyId: string): void {
     this.server.in(lobbyId).emit(PlanningEvent.START);
-    this.lobbyService.lobbies[lobbyId].started = true;
+    this.lobbyService.lobbies[lobbyId].state = "vote";
   }
 
   @SubscribeMessage(PlanningEvent.VOTE)
@@ -70,6 +70,7 @@ export class LobbyGateway implements OnGatewayDisconnect {
   @SubscribeMessage(PlanningEvent.VOTE_DONE)
   completeVote(@MessageBody() lobbyId: string): void {
     this.server.in(lobbyId).emit(PlanningEvent.VOTE_DONE);
+    this.lobbyService.lobbies[lobbyId].state = "results";
   }
 
   @SubscribeMessage(PlanningEvent.RESULTS)

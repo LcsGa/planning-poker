@@ -13,7 +13,10 @@ import { UserService } from "../../shared/services/user.service";
 export class LobbyRoomComponent {
   private readonly user$ = this.userService.user$.pipe(take(1));
 
-  public readonly isHost$ = this.user$.pipe(map((user) => user?.isHost));
+  public readonly isHost$ = this.userService.user$.pipe(
+    tap(console.log), // FIXME too many calls
+    map((user) => user?.isHost)
+  );
 
   public pendingMessage$ = this.user$.pipe(
     map((user) => (user?.isHost ? "Lancer la plannif'..." : "En attente de l'hôte..."))

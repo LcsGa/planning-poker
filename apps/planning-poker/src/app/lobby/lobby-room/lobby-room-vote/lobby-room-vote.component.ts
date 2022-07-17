@@ -36,7 +36,7 @@ export class LobbyRoomVoteComponent {
 
   private user$ = this.userService.user$.pipe(take(1));
 
-  public isHost$ = this.user$.pipe(map((user) => user?.isHost));
+  public isHost$ = this.userService.user$.pipe(map((user) => user?.isHost));
 
   public usersLength$ = this.lobbyService.users$.pipe(map((users) => users.length));
 
