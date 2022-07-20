@@ -1,9 +1,11 @@
-<ng-container *ngIf="users$ | async as users">
-  <ng-container *ngIf="users.length">
-    <p-divider align="center" styleClass="divider divider--first">{{ "Participants" | uppercase }}</p-divider>
+<ng-container *ngIf="(users$ | async) ?? [] as users">
+  <ng-container>
+    <p-divider align="center" styleClass="divider divider--first">
+      {{ "Participants" | uppercase }} ({{ users.length }})
+    </p-divider>
 
     <div class="relative flex-1">
-      <div class="absolute inset-0 flex flex-col gap-3 overflow-y-auto">
+      <div *ngIf="users.length; else noUser" class="absolute inset-0 flex flex-col gap-3 overflow-y-auto">
         <pp-avatar *ngFor="let user of users" [user]="user"></pp-avatar>
       </div>
     </div>
@@ -24,3 +26,7 @@
     <p>Thème {{ themeLabel }}</p>
   </div>
 </div>
+
+<ng-template #noUser>
+  <p class="p-text-secondary text-sm italic">Aucun utilisateur connecté</p>
+</ng-template>
