@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { take, tap } from "rxjs/operators";
+import { tap } from "rxjs/operators";
 import { LobbyService } from "../../shared/services/lobby.service";
 import { Icon } from "../../shared/utils/icon.utils";
 
@@ -40,11 +40,10 @@ export class LobbyJoinComponent implements AfterViewInit {
 
   public joinLobby(): void {
     if (this.lobbyIdCtrl.valid) {
-      this.lobbyService.join(this.lobbyIdCtrl.value);
-      this.lobbyService.state$
+      this.lobbyService
+        .join$(this.lobbyIdCtrl.value)
         .pipe(
-          take(1),
-          tap((state) =>
+          tap(({ state }) =>
             this.router.navigateByUrl(`/lobby/${this.lobbyIdCtrl.value}${state !== "pending" ? "/" + state : ""}`)
           )
         )

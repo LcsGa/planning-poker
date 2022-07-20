@@ -14,7 +14,7 @@ export class LobbyRoomComponent {
   private readonly user$ = this.userService.user$.pipe(take(1));
 
   public readonly isHost$ = this.userService.user$.pipe(
-    tap(console.log), // FIXME too many calls
+    // tap(console.log), // FIXME too many calls
     map((user) => user?.isHost)
   );
 

@@ -25,7 +25,7 @@ export class LobbyCreateComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    this.lobbyService.join(this.lobbyId);
+    this.lobbyService.join$(this.lobbyId).subscribe();
     this.copyLobbyId();
   }
 
