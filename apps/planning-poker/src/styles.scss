@@ -1,5 +1,3 @@
-@tailwind base;
-@tailwind components;
 @tailwind utilities;
 
 :root {
@@ -49,4 +47,14 @@
   margin: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+}
+
+.p {
+  &-dialog-mask {
+    padding: 1rem;
+  }
+
+  &-confirm-dialog {
+    background: var(--surface-overlay);
+  }
 }

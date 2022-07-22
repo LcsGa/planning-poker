@@ -1,12 +1,14 @@
 import { NgModule } from "@angular/core";
+import { ButtonModule } from "primeng/button";
 import { ChipModule } from "primeng/chip";
 import { CommonModule } from "@angular/common";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { PokerCardModule } from "../../../shared/components/poker-card/poker-card.module";
+import { RouterModule } from "@angular/router";
 
 import { LobbyRoomVoteComponent } from "./lobby-room-vote.component";
-import { RouterModule } from "@angular/router";
-import { ButtonModule } from "primeng/button";
-import { RippleModule } from "primeng/ripple";
+
+import { ConfirmationService } from "primeng/api";
 
 @NgModule({
   declarations: [LobbyRoomVoteComponent],
@@ -14,8 +16,8 @@ import { RippleModule } from "primeng/ripple";
     ButtonModule,
     ChipModule,
     CommonModule,
+    ConfirmDialogModule,
     PokerCardModule,
-    RippleModule,
     RouterModule.forChild([
       {
         path: "",
@@ -23,5 +25,6 @@ import { RippleModule } from "primeng/ripple";
       },
     ]),
   ],
+  providers: [ConfirmationService],
 })
 export class LobbyRoomVoteModule {}
