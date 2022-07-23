@@ -9,17 +9,17 @@
 
     <ng-template pTemplate="footer">
       <div class="flex flex-col gap-2">
-        <pp-display-result
+        <pp-label-value
           *ngIf="(average$ | async) !== undefined"
           label="Moyenne"
           [value]="(average$ | async)!"
-        ></pp-display-result>
+        ></pp-label-value>
 
-        <pp-display-result
+        <pp-label-value
           *ngIf="(median$ | async) !== undefined"
           label="Médiane"
           [value]="(median$ | async)!"
-        ></pp-display-result>
+        ></pp-label-value>
       </div>
     </ng-template>
   </p-card>

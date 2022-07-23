@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
-  selector: "pp-display-result[label][value]",
+  selector: "pp-label-value[label][value]",
   template: `
     <div class="flex justify-between">
       <p class="font-bold">{{ label }}</p>
@@ -10,7 +10,7 @@ import { Component, Input } from "@angular/core";
     </div>
   `,
 })
-export class DisplayResultComponent {
+export class LabelValueComponent {
   @Input()
   public label!: string;
 

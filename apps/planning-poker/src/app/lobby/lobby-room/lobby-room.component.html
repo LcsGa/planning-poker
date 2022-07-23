@@ -1,6 +1,10 @@
 <div class="flex-1 flex items-center">
   <p-card [header]="(pendingMessage$ | async)!">
     <pp-waiting class="w-full"></pp-waiting>
+
+    <ng-template pTemplate="footer">
+      <pp-label-value label="Participants" [value]="(usersLength$ | async) ?? 0"></pp-label-value>
+    </ng-template>
   </p-card>
 </div>
 

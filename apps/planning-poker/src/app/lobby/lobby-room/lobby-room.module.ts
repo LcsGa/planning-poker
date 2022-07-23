@@ -4,6 +4,7 @@ import { CardModule } from "primeng/card";
 import { CommonModule } from "@angular/common";
 import { RippleModule } from "primeng/ripple";
 import { RouterModule } from "@angular/router";
+import { SharedModule } from "../../shared/shared.module";
 import { SVGModule } from "../../shared/svg/svg.module";
 
 import { LobbyRoomComponent } from "./lobby-room.component";
@@ -24,6 +25,7 @@ import { IsAuthenticatedGuard } from "../../shared/guards/is-authenticated.guard
         canActivate: [IsAuthenticatedGuard],
       },
     ]),
+    SharedModule,
     SVGModule,
   ],
 })

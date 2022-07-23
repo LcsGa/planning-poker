@@ -5,12 +5,12 @@ import { ChartModule } from "primeng/chart";
 import { CommonModule } from "@angular/common";
 import { RippleModule } from "primeng/ripple";
 import { RouterModule } from "@angular/router";
+import { SharedModule } from "../../../shared/shared.module";
 
 import { LobbyRoomResultsComponent } from "./lobby-room-results.component";
-import { DisplayResultComponent } from "./display-result/display-result.component";
 
 @NgModule({
-  declarations: [LobbyRoomResultsComponent, DisplayResultComponent],
+  declarations: [LobbyRoomResultsComponent],
   imports: [
     ButtonModule,
     CardModule,
@@ -18,6 +18,7 @@ import { DisplayResultComponent } from "./display-result/display-result.componen
     CommonModule,
     RippleModule,
     RouterModule.forChild([{ path: "", component: LobbyRoomResultsComponent }]),
+    SharedModule,
   ],
 })
 export class LobbyRoomResultsModule {}

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { PlanningEvent } from "@planning-poker/shared";
 import { Socket } from "ngx-socket-io";
 import { map, take, tap } from "rxjs/operators";
+import { LobbyService } from "../../shared/services/lobby.service";
 import { UserService } from "../../shared/services/user.service";
 
 @Component({
@@ -18,15 +19,18 @@ export class LobbyRoomComponent {
     map((user) => user?.isHost)
   );
 
-  public pendingMessage$ = this.user$.pipe(
+  public readonly pendingMessage$ = this.user$.pipe(
     map((user) => (user?.isHost ? "Lancer la plannif'..." : "En attente de l'hôte..."))
   );
 
+  public readonly usersLength$ = this.lobbyService.users$.pipe(map((users) => users.length));
+
   constructor(
     private readonly userService: UserService,
+    private readonly lobbyService: LobbyService,
     private readonly socket: Socket,
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute
+    router: Router,
+    activatedRoute: ActivatedRoute
   ) {
     this.socket
       .fromOneTimeEvent(PlanningEvent.START)
