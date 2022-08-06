@@ -12,13 +12,13 @@ import { UserService } from "../../shared/services/user.service";
   styleUrls: ["./lobby-room.component.scss"],
 })
 export class LobbyRoomComponent {
-  public readonly isHost$ = this.userService.singleUser$.pipe(map((user) => user?.isHost));
+  public readonly isHost$ = this.userService.isHost$;
 
-  public readonly pendingMessage$ = this.userService.singleUser$.pipe(
+  public readonly pendingMessage$ = this.userService.user$.pipe(
     map((user) => (user?.isHost ? "Lancer la plannif'..." : "En attente de l'hôte..."))
   );
 
-  public readonly usersLength$ = this.lobbyService.users$.pipe(map((users) => users.length));
+  public readonly usersLength$ = this.lobbyService.usersLength$;
 
   constructor(
     private readonly userService: UserService,

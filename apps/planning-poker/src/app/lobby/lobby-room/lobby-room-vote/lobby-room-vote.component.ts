@@ -37,9 +37,9 @@ export class LobbyRoomVoteComponent {
     { points: "coffee", selected: false },
   ];
 
-  public readonly isHost$ = this.userService.singleUser$.pipe(map((user) => user?.isHost));
+  public readonly isHost$ = this.userService.isHost$;
 
-  public readonly usersLength$ = this.lobbyService.users$.pipe(map((users) => users.length));
+  public readonly usersLength$ = this.lobbyService.usersLength$;
 
   public readonly voteCount$ = this.socket.fromEvent<number>(PlanningEvent.VOTE_COUNT).pipe(startWith(0));
 
@@ -55,6 +55,8 @@ export class LobbyRoomVoteComponent {
     activatedRoute: ActivatedRoute,
     private readonly confirmationService: ConfirmationService
   ) {
+    this.requestsVoteCount();
+
     socket
       .fromOneTimeEvent(PlanningEvent.VOTE_DONE)
       .then(() => router.navigate(["..", "results"], { relativeTo: activatedRoute }));
@@ -94,6 +96,10 @@ export class LobbyRoomVoteComponent {
   public selectCard(points: PokerCard["points"]): void {
     this.cards.forEach((card) => (card.selected = card.points === points && !card.selected));
     this.vote();
+  }
+
+  private requestsVoteCount(): void {
+    this.userService.singleUser$.subscribe((user) => this.socket.emit(PlanningEvent.VOTE_COUNT, user?.lobbyId));
   }
 
   public get points(): PokerCard["points"] | undefined {

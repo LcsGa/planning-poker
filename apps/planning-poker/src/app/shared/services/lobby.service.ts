@@ -20,6 +20,10 @@ export class LobbyService {
 
   constructor(private readonly socket: Socket, private readonly userService: UserService) {}
 
+  public get usersLength$(): Observable<number> {
+    return this.users$.pipe(map((users) => users.length));
+  }
+
   public listenUsersUpdates$(): Observable<unknown> {
     return merge(
       this.socket.fromEvent<Lobby>(UserEvent.CONNECT),

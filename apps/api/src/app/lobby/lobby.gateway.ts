@@ -56,15 +56,20 @@ export class LobbyGateway implements OnGatewayDisconnect {
     this.lobbyService.lobbies[lobbyId].state = "vote";
   }
 
+  @SubscribeMessage(PlanningEvent.VOTE_COUNT)
+  requestsVoteCount(@MessageBody() lobbyId: string) {
+    this.server
+      .in(lobbyId)
+      .emit(
+        PlanningEvent.VOTE_COUNT,
+        this.lobbyService.lobbies[lobbyId].users.filter((user) => user.vote !== undefined).length
+      );
+  }
+
   @SubscribeMessage(PlanningEvent.VOTE)
   vote(@MessageBody() { user, points }: { user: User; points?: PokerCard["points"] }): void {
     this.lobbyService.lobbies[user.lobbyId].users.find((u) => u.id === user.id).vote = points;
-    this.server
-      .in(user.lobbyId)
-      .emit(
-        PlanningEvent.VOTE_COUNT,
-        this.lobbyService.lobbies[user.lobbyId].users.filter((user) => user.vote !== undefined).length
-      );
+    this.requestsVoteCount(user.lobbyId);
   }
 
   @SubscribeMessage(PlanningEvent.VOTE_DONE)
@@ -83,6 +88,7 @@ export class LobbyGateway implements OnGatewayDisconnect {
   @SubscribeMessage(PlanningEvent.VOTE_NEXT)
   keepVoting(@MessageBody() lobbyId: string): void {
     this.lobbyService.lobbies[lobbyId].users.forEach((user) => (user.vote = undefined));
+    this.lobbyService.lobbies[lobbyId].state = "vote";
     this.server.in(lobbyId).emit(PlanningEvent.VOTE_NEXT);
   }
 }

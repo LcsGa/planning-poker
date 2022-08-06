@@ -23,7 +23,7 @@ export class LobbyRoomResultsComponent {
     }))
   );
 
-  public readonly isHost$ = this.userService.singleUser$.pipe(map((user) => user?.isHost));
+  public readonly isHost$ = this.userService.isHost$;
 
   private currentResults$ = from(this.socket.fromOneTimeEvent<VoteResult[]>(PlanningEvent.RESULTS)).pipe(
     map((results) => results.filter(([, count]) => count !== 0)),
