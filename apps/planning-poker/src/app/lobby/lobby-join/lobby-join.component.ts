@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { tap } from "rxjs/operators";
+import { filter, from } from "rxjs";
 import { LobbyService } from "../../shared/services/lobby.service";
 import { Icon } from "../../shared/utils/icon.utils";
 
@@ -28,26 +28,18 @@ export class LobbyJoinComponent implements AfterViewInit {
   }
 
   public pasteLobbyId(): void {
-    navigator.clipboard
-      .readText()
-      .then((text) => {
-        if (this.lobbyService.ID_PATTERN.test(text)) {
-          this.lobbyIdCtrl.setValue(text);
-        }
-      })
-      .catch(console.error);
+    from(navigator.clipboard.readText())
+      .pipe(filter((text) => this.lobbyService.ID_PATTERN.test(text)))
+      .subscribe({ next: (text) => this.lobbyIdCtrl.setValue(text), error: console.error });
   }
 
   public joinLobby(): void {
     if (this.lobbyIdCtrl.valid) {
       this.lobbyService
-        .join$(this.lobbyIdCtrl.value)
-        .pipe(
-          tap(({ state }) =>
-            this.router.navigateByUrl(`/lobby/${this.lobbyIdCtrl.value}${state !== "pending" ? "/" + state : ""}`)
-          )
-        )
-        .subscribe();
+        .joinOnce$(this.lobbyIdCtrl.value)
+        .subscribe(({ state }) =>
+          this.router.navigateByUrl(`/lobby/${this.lobbyIdCtrl.value}${state !== "pending" ? "/" + state : ""}`)
+        );
     } else {
       this.lobbyIdCtrl.updateValueAndValidity();
       this.lobbyIdCtrl.markAsTouched();

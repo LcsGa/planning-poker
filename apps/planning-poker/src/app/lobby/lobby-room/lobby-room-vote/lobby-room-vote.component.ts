@@ -4,8 +4,7 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { PlanningEvent, PokerCard } from "@planning-poker/shared";
 import { Socket } from "ngx-socket-io";
 import { ConfirmationService } from "primeng/api";
-import { combineLatest, Subject } from "rxjs";
-import { filter, map, mapTo, startWith, switchMap, take, tap } from "rxjs/operators";
+import { combineLatest, filter, map, startWith, Subject, switchMap } from "rxjs";
 import { LobbyService } from "../../../shared/services/lobby.service";
 import { UserService } from "../../../shared/services/user.service";
 import { Icon } from "../../../shared/utils/icon.utils";
@@ -38,9 +37,7 @@ export class LobbyRoomVoteComponent {
     { points: "coffee", selected: false },
   ];
 
-  private readonly user$ = this.userService.user$.pipe(take(1));
-
-  public readonly isHost$ = this.userService.user$.pipe(map((user) => user?.isHost));
+  public readonly isHost$ = this.userService.singleUser$.pipe(map((user) => user?.isHost));
 
   public readonly usersLength$ = this.lobbyService.users$.pipe(map((users) => users.length));
 
@@ -64,36 +61,34 @@ export class LobbyRoomVoteComponent {
 
     combineLatest([this.voteCount$, this.usersLength$])
       .pipe(
-        switchMap(([voteCount, usersLength]) => this.requestVoteCompletion$.pipe(mapTo([voteCount, usersLength]))),
-        tap(([voteCount, usersLength]) => {
-          if (voteCount !== usersLength) {
-            this.confirmationService.confirm({
-              header: "Clôturer les votes ?",
-              icon: Icon.of("triangle-exclamation"),
-              message: "Certains joueurs n'ont pas voté, veux-tu clôturer les votes ?",
-              acceptLabel: "Confirmer",
-              rejectLabel: "Refuser",
-              accept: () => this.canCompleteVote$.next(true),
-              reject: () => this.canCompleteVote$.next(false),
-              closeOnEscape: true,
-              dismissableMask: true,
-            });
-          } else {
-            this.canCompleteVote$.next(true);
-          }
-        }),
+        switchMap(([voteCount, usersLength]) => this.requestVoteCompletion$.pipe(map(() => [voteCount, usersLength]))),
         untilDestroyed(this)
       )
-      .subscribe();
+      .subscribe(([voteCount, usersLength]) => {
+        if (voteCount !== usersLength) {
+          this.confirmationService.confirm({
+            header: "Clôturer les votes ?",
+            icon: Icon.of("triangle-exclamation"),
+            message: "Certains joueurs n'ont pas voté, veux-tu clôturer les votes ?",
+            acceptLabel: "Confirmer",
+            rejectLabel: "Refuser",
+            accept: () => this.canCompleteVote$.next(true),
+            reject: () => this.canCompleteVote$.next(false),
+            closeOnEscape: true,
+            dismissableMask: true,
+          });
+        } else {
+          this.canCompleteVote$.next(true);
+        }
+      });
 
     this.canCompleteVote$
       .pipe(
         filter(Boolean),
-        switchMap(() => this.user$),
-        tap((user) => this.socket.emit(PlanningEvent.VOTE_DONE, user?.lobbyId)),
+        switchMap(() => this.userService.singleUser$),
         untilDestroyed(this)
       )
-      .subscribe();
+      .subscribe((user) => this.socket.emit(PlanningEvent.VOTE_DONE, user?.lobbyId));
   }
 
   public selectCard(points: PokerCard["points"]): void {
@@ -106,7 +101,9 @@ export class LobbyRoomVoteComponent {
   }
 
   private vote(): void {
-    this.user$.pipe(tap((user) => this.socket.emit(PlanningEvent.VOTE, { user, points: this.points }))).subscribe();
+    this.userService.singleUser$.subscribe((user) =>
+      this.socket.emit(PlanningEvent.VOTE, { user, points: this.points })
+    );
   }
 
   public requestVoteCompletion(): void {

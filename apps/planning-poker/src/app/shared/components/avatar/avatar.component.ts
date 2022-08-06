@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { User } from "@planning-poker/shared";
-import { map, take } from "rxjs/operators";
+import { map } from "rxjs";
 import { UserService } from "../../services/user.service";
 import { Icon } from "../../utils/icon.utils";
 
@@ -17,10 +17,7 @@ export class AvatarComponent {
     CROWN: Icon.of("crown"),
   };
 
-  public readonly myId$ = this.userService.user$.pipe(
-    take(1),
-    map((user) => user!.id)
-  );
+  public readonly myId$ = this.userService.singleUser$.pipe(map((user) => user!.id));
 
   constructor(private readonly userService: UserService) {}
 

@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { take, tap } from "rxjs/operators";
 import { UserService } from "../shared/services/user.service";
 import { Icon } from "../shared/utils/icon.utils";
 
@@ -23,12 +22,7 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.initStored();
-    this.userService.user$
-      .pipe(
-        take(1),
-        tap((user) => this.pseudoCtrl.setValue(user?.name ?? ""))
-      )
-      .subscribe();
+    this.userService.singleUser$.subscribe((user) => this.pseudoCtrl.setValue(user?.name ?? ""));
   }
 
   public confirmPseudo(): void {

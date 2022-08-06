@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Lobby, User, UserEvent } from "@planning-poker/shared";
 import { Socket } from "ngx-socket-io";
-import { from, merge, Observable, ReplaySubject } from "rxjs";
-import { filter, map, mapTo, switchMap, take, tap } from "rxjs/operators";
+import { filter, map, merge, Observable, ReplaySubject, switchMap, tap } from "rxjs";
 import { UserService } from "./user.service";
 
 export interface UserAndState {
@@ -11,7 +9,6 @@ export interface UserAndState {
   state: Lobby["state"];
 }
 
-@UntilDestroy()
 @Injectable({
   providedIn: "root",
 })
@@ -21,48 +18,38 @@ export class LobbyService {
   private readonly users$$ = new ReplaySubject<User[]>(1);
   public readonly users$ = this.users$$.asObservable();
 
-  private readonly state$$ = new ReplaySubject<Lobby["state"]>(1);
-  public readonly state$ = this.state$$.asObservable();
+  constructor(private readonly socket: Socket, private readonly userService: UserService) {}
 
-  constructor(private readonly socket: Socket, private readonly userService: UserService) {
-    merge(
-      socket.fromEvent<Lobby>(UserEvent.CONNECT),
-      socket.fromEvent<Lobby>(UserEvent.DISCONNECT).pipe(
+  public listenUsersUpdates$(): Observable<unknown> {
+    return merge(
+      this.socket.fromEvent<Lobby>(UserEvent.CONNECT),
+      this.socket.fromEvent<Lobby>(UserEvent.DISCONNECT).pipe(
         switchMap((lobby) =>
-          userService.user$.pipe(
-            take(1),
-            tap((user) => userService.updateUser(lobby.users.find((u) => u.id === user!.id)!)),
-            mapTo(lobby)
+          this.userService.singleUser$.pipe(
+            tap((user) => this.userService.updateUser(lobby.users.find((u) => u.id === user!.id)!)),
+            map(() => lobby)
           )
         )
       )
-    )
-      .pipe(
-        tap((lobby) => this.users$$.next(lobby.users)),
-        untilDestroyed(this)
-      )
-      .subscribe();
+    ).pipe(tap((lobby) => this.users$$.next(lobby.users)));
   }
 
-  public join$(id: string): Observable<UserAndState> {
+  public joinOnce$(id: string): Observable<UserAndState> {
     this.userService.joinLobby(id);
-    return this.connect$();
+    return this.connectOnce$();
   }
 
-  public connect$(): Observable<UserAndState> {
-    return this.userService.user$.pipe(
-      take(1),
+  private connectOnce$(): Observable<UserAndState> {
+    return this.userService.singleUser$.pipe(
       filter(Boolean),
       tap((user) => this.socket.emit(UserEvent.CONNECT, user)),
-      switchMap(() => from(this.socket.fromOneTimeEvent<UserAndState>(UserEvent.ME))),
-      tap(({ user }) => this.userService.updateUser(user)),
-      tap(({ state }) => this.state$$.next(state))
+      switchMap(() => this.socket.fromOneTimeEvent<UserAndState>(UserEvent.ME)),
+      tap(({ user }) => this.userService.updateUser(user))
     );
   }
 
-  public disconnect$(): Observable<User | null> {
-    return this.userService.user$.pipe(
-      take(1),
+  public disconnectOnce$(): Observable<User | null> {
+    return this.userService.singleUser$.pipe(
       tap((user) => this.socket.emit(UserEvent.DISCONNECT, user)),
       tap(() => this.users$$.next([]))
     );

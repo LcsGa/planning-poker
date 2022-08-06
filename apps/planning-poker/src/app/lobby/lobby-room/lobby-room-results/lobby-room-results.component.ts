@@ -3,8 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { PlanningEvent, PointsLabel, VoteResult } from "@planning-poker/shared";
 import { ChartData, ChartOptions } from "chart.js";
 import { Socket } from "ngx-socket-io";
-import { from, Observable } from "rxjs";
-import { map, share, take, tap } from "rxjs/operators";
+import { from, map, Observable, share } from "rxjs";
 import { ThemeService } from "../../../shared/services/theme.service";
 import { UserService } from "../../../shared/services/user.service";
 import { Color } from "../../../shared/utils/color.utils";
@@ -24,16 +23,15 @@ export class LobbyRoomResultsComponent {
     }))
   );
 
-  private readonly user$ = this.userService.user$.pipe(take(1));
+  public readonly isHost$ = this.userService.singleUser$.pipe(map((user) => user?.isHost));
 
-  public readonly isHost$ = this.userService.user$.pipe(map((user) => user?.isHost));
-
-  private results$ = from(this.socket.fromOneTimeEvent<VoteResult[]>(PlanningEvent.RESULTS)).pipe(
+  private currentResults$ = from(this.socket.fromOneTimeEvent<VoteResult[]>(PlanningEvent.RESULTS)).pipe(
     map((results) => results.filter(([, count]) => count !== 0)),
-    map((results) => results.map(([label, count]) => [PointsLabel.get(label)!, count] as const))
+    map((results) => results.map(([label, count]) => [PointsLabel.get(label)!, count] as const)),
+    share()
   );
 
-  public resultsData$: Observable<ChartData> = this.results$.pipe(
+  public resultsData$: Observable<ChartData> = this.currentResults$.pipe(
     map((results) => ({
       labels: results.map(([label]) => label),
       datasets: [
@@ -45,8 +43,9 @@ export class LobbyRoomResultsComponent {
     }))
   );
 
-  private readonly transformedResutls$ = this.results$.pipe(
-    map((results) => results.map(([label, count]) => [Number(label), count]).filter(([val]) => !Number.isNaN(val)))
+  private readonly transformedResutls$ = this.currentResults$.pipe(
+    map((results) => results.map(([label, count]) => [Number(label), count]).filter(([val]) => !Number.isNaN(val))),
+    share()
   );
 
   public readonly average$: Observable<number | undefined> = this.transformedResutls$.pipe(
@@ -70,10 +69,11 @@ export class LobbyRoomResultsComponent {
     private readonly userService: UserService,
     private readonly themeService: ThemeService,
     private readonly socket: Socket,
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute
+    router: Router,
+    activatedRoute: ActivatedRoute
   ) {
-    this.user$.pipe(tap((user) => socket.emit(PlanningEvent.RESULTS, user!.lobbyId))).subscribe(); // ask for results
+    // requests results
+    this.userService.singleUser$.subscribe((user) => socket.emit(PlanningEvent.RESULTS, user!.lobbyId));
 
     socket
       .fromOneTimeEvent(PlanningEvent.VOTE_NEXT)
@@ -81,6 +81,6 @@ export class LobbyRoomResultsComponent {
   }
 
   public keepVoting(): void {
-    this.user$.pipe(tap((user) => this.socket.emit(PlanningEvent.VOTE_NEXT, user!.lobbyId))).subscribe();
+    this.userService.singleUser$.subscribe((user) => this.socket.emit(PlanningEvent.VOTE_NEXT, user!.lobbyId));
   }
 }

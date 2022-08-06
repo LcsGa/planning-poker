@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { User } from "@planning-poker/shared";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, take } from "rxjs";
 import { Color } from "../utils/color.utils";
 
 @Injectable({ providedIn: "root" })
@@ -8,7 +8,10 @@ export class UserService {
   private readonly KEY = "user";
 
   private readonly user$$ = new BehaviorSubject<User | null>(null);
-  public readonly user$ = this.user$$.asObservable();
+
+  public get singleUser$() {
+    return this.user$$.pipe(take(1));
+  }
 
   public updateUser(user: User): void {
     this.user$$.next(user);
@@ -26,7 +29,7 @@ export class UserService {
 
   public initStored(): void {
     const storedUser = localStorage.getItem(this.KEY);
-    this.user$$.next(storedUser ? JSON.parse(storedUser) : null);
+    this.updateUser(storedUser ? JSON.parse(storedUser) : null);
   }
 
   public joinLobby(lobbyId: string): void {
