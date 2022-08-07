@@ -6,12 +6,9 @@
   </div>
 
   <small *ngIf="lobbyIdCtrl.invalid && lobbyIdCtrl.touched" class="p-error">
-    <span *ngIf="lobbyIdCtrl.hasError('required')">
-      Il te faut un salon pour rejoindre un salon
-      <i [class]="ICON.FACE_SWEAT"></i>
-    </span>
+    <span *ngIf="lobbyIdCtrl.hasError('required')"> Tu n'as pas renseigné de salon </span>
 
-    <span *ngIf="lobbyIdCtrl.hasError('pattern')"> L'id du salon est incorrect ! </span>
+    <span *ngIf="lobbyIdCtrl.hasError('pattern')"> L'id du salon est incorrect </span>
   </small>
 
   <ng-template pTemplate="footer">

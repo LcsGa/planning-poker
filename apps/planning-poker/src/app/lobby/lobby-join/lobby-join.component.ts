@@ -16,7 +16,6 @@ export class LobbyJoinComponent implements AfterViewInit {
   public readonly ICON = {
     PASTE: Icon.of("paste"),
     JOIN: Icon.of("person-walking-arrow-right"),
-    FACE_SWEAT: Icon.of("face-grin-beam-sweat"),
   };
 
   constructor(private readonly lobbyService: LobbyService, private readonly router: Router) {
