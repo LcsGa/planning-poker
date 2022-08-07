@@ -1,10 +1,10 @@
 <div class="flex-1 flex items-center">
   <p-card class="w-full" header="Résultats des votes">
     <p-chart
-      [responsive]="true"
       type="doughnut"
       [data]="resultsData$ | async"
       [options]="chartOptions$ | async"
+      [responsive]="true"
     ></p-chart>
 
     <ng-template pTemplate="footer">
