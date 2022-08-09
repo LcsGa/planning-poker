@@ -1,21 +1,28 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
-import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { ExpressAdapter } from "@nestjs/platform-express";
+import * as express from "express";
+import { readFileSync } from "fs";
+import { createServer } from "http";
+import { createServer as createHttpsServer } from "https";
+import path = require("path");
 
 import { AppModule } from "./app/app.module";
-import { environment } from "./environments/environment.prod";
+
+const httpsOptions = {
+  key: readFileSync(path.join("/root/planning-poker/secrets/private-key.pem")),
+  cert: readFileSync(path.join("/root/planning-poker/secrets/public-certificate.pem")),
+};
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
   const globalPrefix = "api";
+  const server = express();
+
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
   app.setGlobalPrefix(globalPrefix);
-  const port = environment.port || 80;
-  await app.listen(port);
-  Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  app.init();
+
+  createServer(server).listen(80);
+  createHttpsServer(httpsOptions, server).listen(443);
 }
 
 bootstrap();

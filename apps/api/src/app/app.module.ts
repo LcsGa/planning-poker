@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 
 import { AppController } from "./app.controller";
 
@@ -11,6 +11,7 @@ import { LobbyService } from "./lobby/lobby.service";
 import { FormatResultsPipe } from "./lobby/pipes/format-results.pipe";
 
 import { join } from "path";
+import { HttpRedirectMiddleware } from "./middlewares/http-redirect.middleware";
 
 @Module({
   controllers: [AppController],
@@ -21,4 +22,8 @@ import { join } from "path";
   ],
   providers: [FormatResultsPipe, LobbyGateway, LobbyService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(HttpRedirectMiddleware).forRoutes("*");
+  }
+}
