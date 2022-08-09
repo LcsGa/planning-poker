@@ -18,7 +18,7 @@ import { routes } from "./app.routes";
     HeaderModule,
     RippleModule,
     RouterModule.forRoot(routes),
-    SocketIoModule.forRoot({ url: "ws://localhost:3000" }),
+    SocketIoModule.forRoot({ url: "ws://194.5.159.32:3000" }),
   ],
   bootstrap: [AppComponent],
 })
