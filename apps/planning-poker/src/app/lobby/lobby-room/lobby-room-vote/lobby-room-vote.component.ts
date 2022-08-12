@@ -4,7 +4,7 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { PlanningEvent, PokerCard } from "@planning-poker/shared";
 import { Socket } from "ngx-socket-io";
 import { ConfirmationService } from "primeng/api";
-import { combineLatest, filter, map, startWith, Subject, switchMap } from "rxjs";
+import { combineLatest, filter, map, Observable, of, startWith, Subject, switchMap, take, tap } from "rxjs";
 import { LobbyService } from "../../../shared/services/lobby.service";
 import { UserService } from "../../../shared/services/user.service";
 import { Icon } from "../../../shared/utils/icon.utils";
@@ -43,9 +43,21 @@ export class LobbyRoomVoteComponent {
 
   public readonly voteCount$ = this.socket.fromEvent<number>(PlanningEvent.VOTE_COUNT).pipe(startWith(0));
 
-  private readonly canCompleteVote$ = new Subject<boolean>();
-
   private readonly requestVoteCompletion$ = new Subject<void>();
+
+  private readonly canCompleteVote$ = new Observable((subsciber) => {
+    this.confirmationService.confirm({
+      header: "Clôturer les votes ?",
+      icon: Icon.of("triangle-exclamation"),
+      message: "Certains joueurs n'ont pas voté, veux-tu clôturer les votes ?",
+      acceptLabel: "Confirmer",
+      rejectLabel: "Refuser",
+      accept: () => subsciber.next(true),
+      reject: () => subsciber.next(false),
+      closeOnEscape: true,
+      dismissableMask: true,
+    });
+  });
 
   constructor(
     private readonly userService: UserService,
@@ -64,28 +76,9 @@ export class LobbyRoomVoteComponent {
     combineLatest([this.voteCount$, this.usersLength$])
       .pipe(
         switchMap(([voteCount, usersLength]) => this.requestVoteCompletion$.pipe(map(() => [voteCount, usersLength]))),
-        untilDestroyed(this)
-      )
-      .subscribe(([voteCount, usersLength]) => {
-        if (voteCount !== usersLength) {
-          this.confirmationService.confirm({
-            header: "Clôturer les votes ?",
-            icon: Icon.of("triangle-exclamation"),
-            message: "Certains joueurs n'ont pas voté, veux-tu clôturer les votes ?",
-            acceptLabel: "Confirmer",
-            rejectLabel: "Refuser",
-            accept: () => this.canCompleteVote$.next(true),
-            reject: () => this.canCompleteVote$.next(false),
-            closeOnEscape: true,
-            dismissableMask: true,
-          });
-        } else {
-          this.canCompleteVote$.next(true);
-        }
-      });
-
-    this.canCompleteVote$
-      .pipe(
+        switchMap(([voteCount, usersLength]) =>
+          voteCount !== usersLength ? this.canCompleteVote$.pipe(take(1)) : of(true)
+        ),
         filter(Boolean),
         switchMap(() => this.userService.singleUser$),
         untilDestroyed(this)
