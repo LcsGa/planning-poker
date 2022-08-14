@@ -1,14 +1,14 @@
 import { IoAdapter } from "@nestjs/platform-socket.io";
-import { Server as ioServer } from "socket.io";
-import { Server as httpsServer } from "https";
+import { Server as IoServer } from "socket.io";
+import { Server as HttpsServer } from "https";
 
 export class ExtendedSocketIoAdapter extends IoAdapter {
-  protected ioServer: ioServer;
+  protected ioServer: IoServer;
 
-  constructor(protected server: httpsServer) {
+  constructor(protected server: HttpsServer) {
     super();
 
-    this.ioServer = new ioServer(server, { cors: { origin: "*" } });
+    this.ioServer = new IoServer(server, { cors: { origin: "*" } });
   }
 
   create(port: number) {
