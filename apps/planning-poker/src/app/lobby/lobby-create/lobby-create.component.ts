@@ -1,19 +1,27 @@
+import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
+import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
+import { InputTextModule } from "primeng/inputtext";
+import { RippleModule } from "primeng/ripple";
+import { ToastModule } from "primeng/toast";
 import { generate as shortUuid } from "short-uuid";
 import { LobbyService } from "../../shared/services/lobby.service";
 import { Icon } from "../../shared/utils/icon.utils";
 
 @Component({
   selector: "pp-lobby-create",
+  standalone: true,
+  imports: [ButtonModule, CardModule, CommonModule, InputTextModule, RippleModule, ToastModule],
   templateUrl: "./lobby-create.component.html",
   styleUrls: ["./lobby-create.component.scss"],
 })
 export class LobbyCreateComponent implements AfterViewInit {
-  public lobbyId = shortUuid().slice(0, 10);
+  protected lobbyId = shortUuid().slice(0, 10);
 
-  public readonly ICON = {
+  protected readonly ICON = {
     COPY: Icon.of("copy"),
     START: Icon.of("flag-checkered"),
   };
@@ -29,7 +37,7 @@ export class LobbyCreateComponent implements AfterViewInit {
     this.copyLobbyId();
   }
 
-  public copyLobbyId(): void {
+  protected copyLobbyId(): void {
     navigator.clipboard.writeText(this.lobbyId).then(() =>
       this.messageService.add({
         severity: "info",
@@ -40,7 +48,7 @@ export class LobbyCreateComponent implements AfterViewInit {
     );
   }
 
-  public startLobby(): void {
+  protected startLobby(): void {
     this.router.navigateByUrl(`/lobby/${this.lobbyId}`);
   }
 }

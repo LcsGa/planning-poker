@@ -3,9 +3,9 @@
     <pp-waiting class="w-full"></pp-waiting>
 
     <ng-template pTemplate="footer">
-      <pp-label-value label="Participants" [value]="(usersLength$ | async) ?? 0"></pp-label-value>
+      <pp-label-value label="Participants" [value]="(lobbyService.usersLength$ | async) ?? 0"></pp-label-value>
     </ng-template>
   </p-card>
 </div>
 
-<button *ngIf="isHost$ | async" pButton pRipple class="w-full" (click)="start()" label="Démarrer"></button>
+<button *ngIf="userService.isHost$ | async" pButton pRipple class="w-full" (click)="start()" label="Démarrer"></button>

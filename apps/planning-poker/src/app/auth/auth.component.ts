@@ -1,31 +1,36 @@
+import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
+import { InputTextModule } from "primeng/inputtext";
+import { RippleModule } from "primeng/ripple";
 import { UserService } from "../shared/services/user.service";
 import { Icon } from "../shared/utils/icon.utils";
 
 @Component({
   selector: "pp-auth",
+  standalone: true,
+  imports: [ButtonModule, CardModule, CommonModule, InputTextModule, ReactiveFormsModule, RippleModule],
   templateUrl: "./auth.component.html",
 })
 export class AuthComponent implements OnInit {
-  public pseudoCtrl!: FormControl;
+  protected pseudoCtrl = new FormControl("", { nonNullable: true, validators: Validators.required });
 
-  public readonly ICON = {
+  protected readonly ICON = {
     ARROW_RIGHT: Icon.of("chevron-right"),
     USER: Icon.of("user-astronaut"),
   };
 
-  constructor(private readonly userService: UserService, private readonly router: Router) {
-    this.pseudoCtrl = new FormControl("", Validators.required);
-  }
+  constructor(private readonly userService: UserService, private readonly router: Router) {}
 
   ngOnInit(): void {
     this.userService.initStored();
     this.userService.singleUser$.subscribe((user) => this.pseudoCtrl.setValue(user?.name ?? ""));
   }
 
-  public confirmPseudo(): void {
+  protected confirmPseudo(): void {
     if (this.pseudoCtrl.valid) {
       this.userService.create(this.pseudoCtrl.value);
     } else {

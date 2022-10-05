@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
-import { HeaderModule } from "./shared/components/header/header.module";
+import { HeaderComponent } from "./shared/components/header/header.component";
 import { RippleModule } from "primeng/ripple";
 import { RouterModule } from "@angular/router";
 import { SocketIoModule } from "ngx-socket-io";
@@ -15,7 +15,7 @@ import { routes } from "./app.routes";
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
-    HeaderModule,
+    HeaderComponent,
     RippleModule,
     RouterModule.forRoot(routes),
     SocketIoModule.forRoot({ url: "ws://194.5.159.32:3000" }),

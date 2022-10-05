@@ -10,7 +10,7 @@ import { ThemeService } from "./shared/services/theme.service";
 })
 export class AppComponent implements OnInit {
   constructor(
-    private primengConfig: PrimeNGConfig,
+    private readonly primengConfig: PrimeNGConfig,
     private readonly themeService: ThemeService,
     lobbyService: LobbyService
   ) {

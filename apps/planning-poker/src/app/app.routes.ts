@@ -4,7 +4,7 @@ export const routes: Route[] = [
   { path: "", redirectTo: "auth", pathMatch: "full" },
   {
     path: "auth",
-    loadChildren: () => import("./auth/auth.module").then((m) => m.AuthModule),
+    loadComponent: () => import("./auth/auth.component").then((m) => m.AuthComponent),
   },
   {
     path: "lobby",

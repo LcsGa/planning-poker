@@ -5,7 +5,6 @@
     "defaultBase": "main"
   },
   "cli": {
-    "defaultCollection": "@nrwl/angular",
     "packageManager": "npm"
   },
   "implicitDependencies": {
@@ -24,14 +23,6 @@
       }
     }
   },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  },
   "generators": {
     "@nrwl/angular:application": {
       "style": "scss",
@@ -44,5 +35,10 @@
       "style": "scss"
     }
   },
-  "defaultProject": "planning-poker"
+  "defaultProject": "planning-poker",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
+    }
+  }
 }

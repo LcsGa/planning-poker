@@ -1,23 +1,29 @@
+import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { Router } from "@angular/router";
-import { ThemeService } from "../../services/theme.service";
+import { Router, RouterModule } from "@angular/router";
+import { ButtonModule } from "primeng/button";
+import { RippleModule } from "primeng/ripple";
+import { SidebarModule } from "primeng/sidebar";
 import { Icon } from "../../utils/icon.utils";
+import { MenuComponent } from "../menu/menu.component";
 
 @Component({
   selector: "pp-header",
+  standalone: true,
+  imports: [CommonModule, ButtonModule, MenuComponent, RippleModule, RouterModule, SidebarModule],
   templateUrl: "./header.component.html",
   styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent {
-  public readonly ICON = {
+  protected readonly ICON = {
     MENU: Icon.of("bars"),
   };
 
-  public displayMenu = false;
+  protected displayMenu = false;
 
   constructor(private readonly router: Router) {}
 
-  public goToAuth(): void {
+  protected goToAuth(): void {
     this.router.navigateByUrl("/auth");
   }
 }

@@ -1,28 +1,32 @@
+import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PlanningEvent } from "@planning-poker/shared";
 import { Socket } from "ngx-socket-io";
-import { map, take } from "rxjs";
+import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
+import { RippleModule } from "primeng/ripple";
+import { map } from "rxjs";
+import { LabelValueComponent } from "../../shared/components/label-value/label-value.component";
 import { LobbyService } from "../../shared/services/lobby.service";
 import { UserService } from "../../shared/services/user.service";
+import { WaitingComponent } from "../../shared/svg/waiting/waiting.component";
 
 @Component({
   selector: "pp-lobby-room",
+  standalone: true,
+  imports: [ButtonModule, CardModule, CommonModule, LabelValueComponent, RippleModule, WaitingComponent],
   templateUrl: "./lobby-room.component.html",
   styleUrls: ["./lobby-room.component.scss"],
 })
 export class LobbyRoomComponent {
-  public readonly isHost$ = this.userService.isHost$;
-
-  public readonly pendingMessage$ = this.userService.user$.pipe(
+  protected readonly pendingMessage$ = this.userService.user$.pipe(
     map((user) => (user?.isHost ? "Lancer la plannif'..." : "En attente de l'hôte..."))
   );
 
-  public readonly usersLength$ = this.lobbyService.usersLength$;
-
   constructor(
-    private readonly userService: UserService,
-    private readonly lobbyService: LobbyService,
+    protected readonly userService: UserService,
+    protected readonly lobbyService: LobbyService,
     private readonly socket: Socket,
     router: Router,
     activatedRoute: ActivatedRoute
@@ -32,7 +36,7 @@ export class LobbyRoomComponent {
       .then(() => router.navigate([".", "vote"], { relativeTo: activatedRoute }));
   }
 
-  public start(): void {
+  protected start(): void {
     this.userService.singleUser$.subscribe((user) => this.socket.emit(PlanningEvent.START, user!.lobbyId));
   }
 }

@@ -1,4 +1,4 @@
-<ng-container *ngIf="(users$ | async) ?? [] as users">
+<ng-container *ngIf="(lobbyService.users$ | async) ?? [] as users">
   <ng-container>
     <p-divider align="center" styleClass="divider divider--first">
       {{ "Participants" | uppercase }} ({{ users.length }})
@@ -23,7 +23,7 @@
       (click)="switchTheme()"
     ></p-toggleButton>
 
-    <p>Thème {{ themeLabel }}</p>
+    <p>Thème {{ themeLabel$$ | async }}</p>
   </div>
 </div>
 

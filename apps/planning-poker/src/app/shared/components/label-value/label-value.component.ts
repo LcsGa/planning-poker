@@ -1,7 +1,10 @@
+import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
 
 @Component({
   selector: "pp-label-value[label][value]",
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <div class="flex justify-between">
       <p class="font-bold">{{ label }}</p>
