@@ -15,7 +15,7 @@ export class UserService {
   }
 
   public get isHost$(): Observable<boolean> {
-    return this.user$.pipe(map((user) => user?.isHost ?? false));
+    return this.user$.pipe(map((user) => !!user?.isHost));
   }
 
   public updateUser(user: User): void {

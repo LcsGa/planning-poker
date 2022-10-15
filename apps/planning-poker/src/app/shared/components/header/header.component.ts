@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Router } from "@angular/router";
+import { BehaviorSubject } from "rxjs";
 import { Icon } from "../../utils/icon.utils";
 
 @Component({
@@ -8,15 +8,9 @@ import { Icon } from "../../utils/icon.utils";
   styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent {
-  public readonly ICON = {
+  protected readonly ICON = {
     MENU: Icon.of("bars"),
   };
 
-  public displayMenu = false;
-
-  constructor(private readonly router: Router) {}
-
-  public goToAuth(): void {
-    this.router.navigateByUrl("/auth");
-  }
+  protected readonly displayMenu$$ = new BehaviorSubject(false);
 }

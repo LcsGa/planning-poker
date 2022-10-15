@@ -25,4 +25,11 @@
   </p-card>
 </div>
 
-<button *ngIf="isHost$ | async" class="w-full" pButton pRipple label="Continuer" (click)="keepVoting()"></button>
+<button
+  *ngIf="userService.isHost$ | async"
+  class="w-full"
+  pButton
+  pRipple
+  label="Continuer"
+  (click)="keepVoting$$.next()"
+></button>

@@ -2,7 +2,7 @@
   <div class="p-inputgroup">
     <input id="lobbyId" type="text" pInputText [formControl]="lobbyIdCtrl" placeholder="ID du salon" />
 
-    <button pButton pRipple [icon]="ICON.PASTE" (click)="pasteLobbyId()"></button>
+    <button pButton pRipple [icon]="ICON.PASTE" (click)="pasteLobbyId$$.next()"></button>
   </div>
 
   <small *ngIf="lobbyIdCtrl.invalid && lobbyIdCtrl.touched" class="p-error">
@@ -13,7 +13,14 @@
 
   <ng-template pTemplate="footer">
     <div class="flex justify-end">
-      <button pButton pRipple label="Rejoindre" [icon]="ICON.JOIN" iconPos="right" (click)="joinLobby()"></button>
+      <button
+        pButton
+        pRipple
+        label="Rejoindre"
+        [icon]="ICON.JOIN"
+        iconPos="right"
+        (click)="joinLobby$$.next()"
+      ></button>
     </div>
   </ng-template>
 </p-card>

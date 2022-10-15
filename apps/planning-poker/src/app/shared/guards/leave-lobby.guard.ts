@@ -9,7 +9,7 @@ export class LeaveLobbyGuard implements CanDeactivate<unknown> {
   constructor(private readonly lobbyService: LobbyService) {}
 
   canDeactivate(): boolean {
-    this.lobbyService.disconnectOnce$().subscribe();
+    this.lobbyService.leave$().subscribe();
     return true;
   }
 }

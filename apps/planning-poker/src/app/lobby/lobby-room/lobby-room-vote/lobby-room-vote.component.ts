@@ -4,7 +4,7 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { PlanningEvent, PokerCard } from "@planning-poker/shared";
 import { Socket } from "ngx-socket-io";
 import { ConfirmationService } from "primeng/api";
-import { combineLatest, filter, map, Observable, of, startWith, Subject, switchMap, take, tap } from "rxjs";
+import { audit, combineLatest, combineLatestWith, filter, Observable, of, Subject, switchMap } from "rxjs";
 import { LobbyService } from "../../../shared/services/lobby.service";
 import { UserService } from "../../../shared/services/user.service";
 import { Icon } from "../../../shared/utils/icon.utils";
@@ -16,11 +16,11 @@ import { Icon } from "../../../shared/utils/icon.utils";
   styleUrls: ["../lobby-room.component.scss"],
 })
 export class LobbyRoomVoteComponent {
-  public readonly ICON = {
+  protected readonly ICON = {
     CHECK: Icon.of("circle-check"),
   };
 
-  public readonly cards: PokerCard[] = [
+  protected readonly cards: PokerCard[] = [
     { points: "0", selected: false },
     { points: "demi", selected: false },
     { points: "1", selected: false },
@@ -37,47 +37,56 @@ export class LobbyRoomVoteComponent {
     { points: "coffee", selected: false },
   ];
 
-  public readonly isHost$ = this.userService.isHost$;
+  protected readonly vote$$ = new Subject<PokerCard["points"] | void>();
 
-  public readonly usersLength$ = this.lobbyService.usersLength$;
+  protected readonly voteCount$ = this.socket.fromEvent<number>(PlanningEvent.VOTE_COUNT);
 
-  public readonly voteCount$ = this.socket.fromEvent<number>(PlanningEvent.VOTE_COUNT).pipe(startWith(0));
+  protected readonly requestVoteCompletion$$ = new Subject<void>();
 
-  private readonly requestVoteCompletion$ = new Subject<void>();
-
-  private readonly canCompleteVote$ = new Observable((subsciber) => {
+  private readonly requestForcedVoteCompletion$ = new Observable((subsciber) => {
     this.confirmationService.confirm({
       header: "Clôturer les votes ?",
       icon: Icon.of("triangle-exclamation"),
       message: "Certains joueurs n'ont pas voté, veux-tu clôturer les votes ?",
       acceptLabel: "Confirmer",
       rejectLabel: "Refuser",
-      accept: () => subsciber.next(true),
-      reject: () => subsciber.next(false),
+      accept: () => {
+        subsciber.next(true);
+        subsciber.complete();
+      },
+      reject: () => {
+        subsciber.next(false);
+        subsciber.complete();
+      },
       closeOnEscape: true,
       dismissableMask: true,
     });
   });
 
   constructor(
-    private readonly userService: UserService,
-    private readonly lobbyService: LobbyService,
+    protected readonly userService: UserService,
+    protected readonly lobbyService: LobbyService,
     private readonly socket: Socket,
     router: Router,
     activatedRoute: ActivatedRoute,
     private readonly confirmationService: ConfirmationService
   ) {
-    this.requestsVoteCount();
+    // start requesting the votes count
+    this.userService.singleUser$.subscribe((user) => this.socket.emit(PlanningEvent.VOTE_COUNT, user?.lobbyId));
+
+    this.vote$$
+      .pipe(combineLatestWith(userService.singleUser$), untilDestroyed(this))
+      .subscribe(([points, user]) => this.socket.emit(PlanningEvent.VOTE, { user, points }));
 
     socket
       .fromOneTimeEvent(PlanningEvent.VOTE_DONE)
       .then(() => router.navigate(["..", "results"], { relativeTo: activatedRoute }));
 
-    combineLatest([this.voteCount$, this.usersLength$])
+    combineLatest([this.voteCount$, lobbyService.usersLength$])
       .pipe(
-        switchMap(([voteCount, usersLength]) => this.requestVoteCompletion$.pipe(map(() => [voteCount, usersLength]))),
+        audit(() => this.requestVoteCompletion$$),
         switchMap(([voteCount, usersLength]) =>
-          voteCount !== usersLength ? this.canCompleteVote$.pipe(take(1)) : of(true)
+          voteCount !== usersLength ? this.requestForcedVoteCompletion$ : of(true)
         ),
         filter(Boolean),
         switchMap(() => this.userService.singleUser$),
@@ -86,26 +95,12 @@ export class LobbyRoomVoteComponent {
       .subscribe((user) => this.socket.emit(PlanningEvent.VOTE_DONE, user?.lobbyId));
   }
 
-  public selectCard(points: PokerCard["points"]): void {
+  protected selectCard(points: PokerCard["points"]): void {
     this.cards.forEach((card) => (card.selected = card.points === points && !card.selected));
-    this.vote();
+    this.vote$$.next(this.selectedPoints);
   }
 
-  private requestsVoteCount(): void {
-    this.userService.singleUser$.subscribe((user) => this.socket.emit(PlanningEvent.VOTE_COUNT, user?.lobbyId));
-  }
-
-  public get points(): PokerCard["points"] | undefined {
+  protected get selectedPoints(): PokerCard["points"] | undefined {
     return this.cards.find((card) => card.selected)?.points;
-  }
-
-  private vote(): void {
-    this.userService.singleUser$.subscribe((user) =>
-      this.socket.emit(PlanningEvent.VOTE, { user, points: this.points })
-    );
-  }
-
-  public requestVoteCompletion(): void {
-    this.requestVoteCompletion$.next();
   }
 }

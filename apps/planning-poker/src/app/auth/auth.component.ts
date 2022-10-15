@@ -1,38 +1,53 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { merge, of, partition, Subject, switchMap, tap } from "rxjs";
 import { UserService } from "../shared/services/user.service";
 import { Icon } from "../shared/utils/icon.utils";
 
+@UntilDestroy()
 @Component({
   selector: "pp-auth",
   templateUrl: "./auth.component.html",
 })
-export class AuthComponent implements OnInit {
-  public pseudoCtrl!: FormControl;
+export class AuthComponent {
+  protected readonly pseudoCtrl = new FormControl<string>("", { nonNullable: true, validators: Validators.required });
 
-  public readonly ICON = {
+  protected readonly confirmPseudo$$ = new Subject<void>();
+
+  protected readonly ICON = {
     ARROW_RIGHT: Icon.of("chevron-right"),
     USER: Icon.of("user-astronaut"),
   };
 
-  constructor(private readonly userService: UserService, private readonly router: Router) {
-    this.pseudoCtrl = new FormControl("", Validators.required);
-  }
+  constructor(userService: UserService, router: Router) {
+    userService.initStored();
+    userService.singleUser$.subscribe((user) => this.pseudoCtrl.setValue(user?.name ?? ""));
 
-  ngOnInit(): void {
-    this.userService.initStored();
-    this.userService.singleUser$.subscribe((user) => this.pseudoCtrl.setValue(user?.name ?? ""));
-  }
-
-  public confirmPseudo(): void {
-    if (this.pseudoCtrl.valid) {
-      this.userService.create(this.pseudoCtrl.value);
-    } else {
-      this.userService.reset();
-      this.pseudoCtrl.updateValueAndValidity();
-      this.pseudoCtrl.markAsTouched();
-    }
-    this.router.navigateByUrl("/lobby/init");
+    this.confirmPseudo$$
+      .pipe(
+        switchMap((confirmPseudo) => {
+          const [valid$, invalid$] = partition(of(confirmPseudo), () => this.pseudoCtrl.valid);
+          return merge(
+            valid$.pipe(
+              tap(() => {
+                userService.create(this.pseudoCtrl.value);
+                router.navigateByUrl("/lobby/init");
+              })
+            ),
+            invalid$.pipe(
+              tap(() => {
+                userService.reset();
+                this.pseudoCtrl.updateValueAndValidity();
+                this.pseudoCtrl.markAsTouched();
+                this.pseudoCtrl.markAsDirty();
+              })
+            )
+          );
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 }

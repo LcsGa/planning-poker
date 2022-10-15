@@ -1,46 +1,73 @@
-import { AfterViewInit, Component } from "@angular/core";
+import { Component } from "@angular/core";
+import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MessageService } from "primeng/api";
+import {
+  debounceTime,
+  delayWhen,
+  distinctUntilChanged,
+  filter,
+  from,
+  map,
+  merge,
+  Subject,
+  take,
+  tap,
+  timer,
+} from "rxjs";
 import { generate as shortUuid } from "short-uuid";
 import { LobbyService } from "../../shared/services/lobby.service";
 import { Icon } from "../../shared/utils/icon.utils";
 
+@UntilDestroy()
 @Component({
   selector: "pp-lobby-create",
   templateUrl: "./lobby-create.component.html",
   styleUrls: ["./lobby-create.component.scss"],
 })
-export class LobbyCreateComponent implements AfterViewInit {
-  public lobbyId = shortUuid().slice(0, 10);
+export class LobbyCreateComponent {
+  protected readonly lobbyIdCtrl = new FormControl<string>(shortUuid().slice(0, 10), {
+    nonNullable: true,
+    validators: [Validators.required, Validators.minLength(10)],
+  });
 
-  public readonly ICON = {
+  protected readonly filterPattern = /\w/;
+
+  protected readonly ICON = {
     COPY: Icon.of("copy"),
     START: Icon.of("flag-checkered"),
   };
 
-  constructor(
-    private readonly messageService: MessageService,
-    private readonly lobbyService: LobbyService,
-    private readonly router: Router
-  ) {}
+  protected readonly createLobby$$ = new Subject<void>();
 
-  ngAfterViewInit(): void {
-    this.lobbyService.joinOnce$(this.lobbyId).subscribe();
-    this.copyLobbyId();
-  }
+  protected readonly copyLobbyId$$ = new Subject<void>();
 
-  public copyLobbyId(): void {
-    navigator.clipboard.writeText(this.lobbyId).then(() =>
-      this.messageService.add({
-        severity: "info",
-        summary: "Copié !",
-        closable: false,
-        life: 1_000,
-      })
-    );
-  }
+  constructor(messageService: MessageService, lobbyService: LobbyService, router: Router) {
+    this.createLobby$$
+      .pipe(
+        filter(() => this.lobbyIdCtrl.valid),
+        take(1),
+        delayWhen(() => lobbyService.join$(this.lobbyIdCtrl.value))
+      )
+      .subscribe((lobbyId) => router.navigateByUrl(`/lobby/${lobbyId}`));
 
-  public startLobby(): void {
-    this.router.navigateByUrl(`/lobby/${this.lobbyId}`);
+    merge(timer(0), this.lobbyIdCtrl.valueChanges.pipe(distinctUntilChanged(), debounceTime(300)), this.copyLobbyId$$)
+      .pipe(
+        filter(() => this.lobbyIdCtrl.valid),
+        map(() => navigator.clipboard),
+        filter(Boolean),
+        delayWhen((clipboard) => from(clipboard.writeText(this.lobbyIdCtrl.value))),
+        tap(() =>
+          messageService.add({
+            severity: "info",
+            summary: "Copié !",
+            closable: false,
+            life: 1000,
+          })
+        ),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 }
