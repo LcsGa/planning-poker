@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
-import { ThemeService } from "../../services/theme.service";
 import { Icon } from "../../utils/icon.utils";
 
 @Component({
