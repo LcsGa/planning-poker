@@ -1,16 +1,22 @@
-<div class="flex items-center gap-2 cursor-pointer" [tabIndex]="0" (click)="goToAuth()" (keydown.enter)="goToAuth()">
+<a class="flex items-center gap-2" routerLink="auth">
   <img class="header__logo" src="favicon.svg" alt="Icone PlanningPoker" />
 
   <h1 class="header__title font-bold">PlanningPoker</h1>
-</div>
+</a>
 
 <button
   pButton
   pRipple
   class="p-button-secondary p-button-text p-button-rounded"
-  (click)="displayMenu = true"
+  (click)="displayMenu$$.next(true)"
   [icon]="ICON.MENU"
 ></button>
-<p-sidebar class="absolute" [(visible)]="displayMenu" position="right" [showCloseIcon]="true">
+<p-sidebar
+  class="absolute"
+  [visible]="(displayMenu$$ | async)!"
+  (visibleChange)="displayMenu$$.next($event)"
+  position="right"
+  [showCloseIcon]="true"
+>
   <pp-menu></pp-menu>
 </p-sidebar>

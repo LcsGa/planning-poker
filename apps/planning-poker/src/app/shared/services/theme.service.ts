@@ -17,7 +17,7 @@ export class ThemeService {
 
   constructor(@Inject(DOCUMENT) private readonly document: Document) {}
 
-  public switch(theme: Theme): void {
+  public update(theme: Theme): void {
     const themeLink = this.document.querySelector("[theme]") as HTMLLinkElement;
     themeLink.href = theme + ".css";
     this.store(theme);
@@ -29,6 +29,6 @@ export class ThemeService {
   }
 
   public init(): void {
-    this.switch((localStorage.getItem(this.KEY) as Theme | null) ?? "light");
+    this.update((localStorage.getItem(this.KEY) as Theme | null) ?? "light");
   }
 }

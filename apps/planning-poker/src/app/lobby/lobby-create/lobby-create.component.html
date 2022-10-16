@@ -1,15 +1,26 @@
 <p-toast position="top-right"></p-toast>
 
-<p-card header="Bravo, ton salon a été créé !">
+<p-card header="Les participants n'attendent plus que toi !">
   <div class="p-inputgroup">
-    <input type="text" pInputText [value]="lobbyId" disabled />
+    <input type="text" pInputText [formControl]="lobbyIdCtrl" [filterPattern]="filterPattern" />
 
-    <button pButton pRipple [icon]="ICON.COPY" (click)="copyLobbyId()"></button>
+    <button pButton pRipple [icon]="ICON.COPY" (click)="copyLobbyId$$.next()"></button>
   </div>
+
+  <small *ngIf="lobbyIdCtrl.touched && lobbyIdCtrl.invalid" class="p-error">
+    L'id du salon doit contenir au moins 10 caractères
+  </small>
 
   <ng-template pTemplate="footer">
     <div class="flex justify-end">
-      <button pButton pRipple label="Commencer" [icon]="ICON.START" iconPos="right" (click)="startLobby()"></button>
+      <button
+        pButton
+        pRipple
+        label="Commencer"
+        [icon]="ICON.START"
+        iconPos="right"
+        (click)="createLobby$$.next()"
+      ></button>
     </div>
   </ng-template>
 </p-card>

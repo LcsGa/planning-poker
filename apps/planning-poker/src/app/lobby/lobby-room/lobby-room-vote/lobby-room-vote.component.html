@@ -1,6 +1,6 @@
 <p-confirmDialog class="absolute" rejectButtonStyleClass="p-button-text" acceptIcon="" rejectIcon=""></p-confirmDialog>
 
-<ng-container *ngIf="usersLength$ | async as usersLength">
+<ng-container *ngIf="lobbyService.usersLength$ | async as usersLength">
   <p-chip *ngIf="!!usersLength" [icon]="ICON.CHECK" [label]="(voteCount$ | async) + ' / ' + usersLength"></p-chip>
 </ng-container>
 
@@ -17,9 +17,9 @@
 </div>
 
 <p-button
-  *ngIf="isHost$ | async"
+  *ngIf="userService.isHost$ | async"
   styleClass="w-full"
   label="Terminer"
-  [disabled]="!points"
-  (onClick)="requestVoteCompletion()"
+  [disabled]="!selectedPoints"
+  (onClick)="requestVoteCompletion$$.next()"
 ></p-button>

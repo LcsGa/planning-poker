@@ -9,11 +9,11 @@ import { Icon } from "../../shared/utils/icon.utils";
   styleUrls: ["./lobby-init.component.scss"],
 })
 export class LobbyInitComponent {
-  public readonly initHeader$ = this.userService.singleUser$.pipe(
+  protected readonly initHeader$ = this.userService.singleUser$.pipe(
     map((user) => `${user!.name}, que veux-tu faire maintenant ?`)
   );
 
-  public readonly ICON = {
+  protected readonly ICON = {
     CREATE: Icon.of("plus-square"),
     JOIN: Icon.of("person-booth"),
   };

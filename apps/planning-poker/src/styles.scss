@@ -49,6 +49,21 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+a {
+  position: relative;
+  color: var(--text-color);
+  text-decoration: none;
+  outline: none;
+
+  &:focus::before {
+    content: "";
+    position: absolute;
+    inset: -0.5rem;
+    border: 3px solid var(--primary-200);
+    border-radius: 0.5rem;
+  }
+}
+
 .p {
   &-dialog-mask {
     padding: 1rem;

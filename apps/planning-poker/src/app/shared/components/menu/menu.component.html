@@ -1,4 +1,4 @@
-<ng-container *ngIf="(users$ | async) ?? [] as users">
+<ng-container *ngIf="(lobbyService.users$ | async) ?? [] as users">
   <ng-container>
     <p-divider align="center" styleClass="divider divider--first">
       {{ "Participants" | uppercase }} ({{ users.length }})
@@ -17,13 +17,14 @@
 <div class="menu__settings">
   <div class="flex items-center gap-4 mt-1">
     <p-toggleButton
-      [onIcon]="(icon$ | async)!.on"
-      [offIcon]="(icon$ | async)!.off"
+      *ngIf="icon$ | async as icon"
+      [onIcon]="icon.on"
+      [offIcon]="icon.off"
       iconPos="single"
-      (click)="switchTheme()"
+      (click)="switchTheme$$.next()"
     ></p-toggleButton>
 
-    <p>Thème {{ themeLabel }}</p>
+    <p>Thème {{ themeLabel$ | async }}</p>
   </div>
 </div>
 
