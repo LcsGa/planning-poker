@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface PokerCard {
   points: "0" | "demi" | "1" | "2" | "3" | "5" | "8" | "13" | "20" | "40" | "80" | "100" | "question" | "coffee";
   selected: boolean;
@@ -20,4 +22,4 @@ export const PointsLabel: Map<PokerCard["points"], string> = new Map([
   ["coffee", "Café"],
 ]);
 
-export type VoteResult = [PokerCard["points"], number];
+export type VoteResult = [PokerCard["points"], User["name"][]];

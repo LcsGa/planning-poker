@@ -50,7 +50,7 @@ export class LobbyJoinComponent {
         switchMap(() => lobbyService.join$(this.lobbyIdCtrl.value))
       )
       .subscribe(({ state }) =>
-        router.navigateByUrl(`/lobby/${this.lobbyIdCtrl.value}/${state !== "pending" ? state : ""}`)
+        router.navigateByUrl(`/lobby/${this.lobbyIdCtrl.value}${state !== "pending" ? `/${state}` : ""}`)
       );
   }
 }

@@ -5,12 +5,12 @@ import { PointsLabel, User, VoteResult } from "@planning-poker/shared";
 export class FormatResultsPipe implements PipeTransform {
   public transform(users: User[]) {
     const results = new Map<VoteResult[0], VoteResult[1]>(
-      [...PointsLabel.keys()].reduce((acc, label) => [...acc, [label, 0]], [])
+      [...PointsLabel.keys()].reduce((acc, label) => [...acc, [label, []]], [])
     );
 
     users.forEach((user) => {
       const vote = user.vote;
-      if (vote) results.set(vote, results.get(vote)! + 1);
+      if (vote) results.set(vote, [...results.get(vote), user.name]);
     });
 
     return [...results.entries()];

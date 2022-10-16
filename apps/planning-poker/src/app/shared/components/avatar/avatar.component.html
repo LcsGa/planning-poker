@@ -1,5 +1,5 @@
 <p-avatar shape="circle" styleClass="font-black" [style]="{ background, color }">{{
-  user.name | uppercase | firstLetter
+  (user.name | uppercase)[0]
 }}</p-avatar>
 
 <div class="relative flex items-center w-full h-full">

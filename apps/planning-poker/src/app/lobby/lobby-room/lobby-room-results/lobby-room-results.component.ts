@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { PlanningEvent, PointsLabel, VoteResult } from "@planning-poker/shared";
 import { ChartData, ChartOptions } from "chart.js";
 import { Socket } from "ngx-socket-io";
-import { from, map, Observable, share, Subject, switchMap, take } from "rxjs";
+import { combineLatestWith, from, map, Observable, share, Subject, switchMap, take, withLatestFrom } from "rxjs";
 import { ThemeService } from "../../../shared/services/theme.service";
 import { UserService } from "../../../shared/services/user.service";
 import { Color } from "../../../shared/utils/color.utils";
@@ -15,34 +15,53 @@ import { median } from "../../../shared/utils/median.utils";
   styleUrls: ["./lobby-room-results.component.scss", "../lobby-room.component.scss"],
 })
 export class LobbyRoomResultsComponent {
-  protected readonly chartOptions$: Observable<ChartOptions> = this.themeService.theme$.pipe(
-    map((theme) => ({
-      plugins: {
-        legend: { labels: { color: theme === "dark" ? Color.TEXT.DARK : Color.TEXT.LIGHT } },
-      },
-    }))
-  );
-
   private readonly currentResults$ = from(this.socket.fromOneTimeEvent<VoteResult[]>(PlanningEvent.RESULTS)).pipe(
-    map((results) => results.filter(([, count]) => count !== 0)),
-    map((results) => results.map(([label, count]) => [PointsLabel.get(label)!, count] as const)),
+    map((results) => results.filter(([, users]) => !!users.length)),
     share()
   );
 
+  protected readonly chartOptions$: Observable<ChartOptions> = this.themeService.theme$.pipe(
+    combineLatestWith(this.currentResults$),
+    map(
+      ([theme, results]) =>
+        <ChartOptions>{
+          plugins: {
+            legend: { labels: { color: theme === "dark" ? Color.TEXT.DARK : Color.TEXT.LIGHT } },
+            tooltip: {
+              boxPadding: 8,
+              callbacks: {
+                afterFooter: (tooltipItems) =>
+                  results
+                    .filter(([label]) => tooltipItems.map(({ label }) => label).includes(PointsLabel.get(label)!))
+                    .flatMap(([, users]) => users)
+                    .map((user) => `- ${user}`)
+                    .join("\n"),
+              },
+            },
+          },
+        }
+    )
+  );
+
   protected readonly resultsData$: Observable<ChartData> = this.currentResults$.pipe(
-    map((results) => ({
-      labels: results.map(([label]) => label),
-      datasets: [
-        {
-          data: results.map(([, count]) => count),
-          backgroundColor: Object.values(Color.THEME),
-        },
-      ],
-    }))
+    map(
+      (results) =>
+        <ChartData>{
+          labels: results.map(([label]) => PointsLabel.get(label)),
+          datasets: [
+            {
+              data: results.map(([, users]) => users.length),
+              backgroundColor: Object.values(Color.THEME),
+            },
+          ],
+        }
+    )
   );
 
   protected readonly transformedResutls$ = this.currentResults$.pipe(
-    map((results) => results.map(([label, count]) => [Number(label), count]).filter(([val]) => !Number.isNaN(val))),
+    map((results) =>
+      results.map(([label, users]) => [Number(label), users.length]).filter(([val]) => !Number.isNaN(val))
+    ),
     share()
   );
 
